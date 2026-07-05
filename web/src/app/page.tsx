@@ -1,3 +1,4 @@
+import { AuthStatus } from "@/components/auth/AuthStatus";
 import { AIHeroCard } from "@/components/home/AIHeroCard";
 import { BottomNavigation } from "@/components/home/BottomNavigation";
 import { GreetingSection } from "@/components/home/GreetingSection";
@@ -51,6 +52,9 @@ export default function Home() {
     <main className="min-h-screen bg-[#F5F7FB] text-slate-950">
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-28 pt-8 sm:px-6">
         <GreetingSection greeting="Good morning" userName="Abdi" />
+        <div className="mt-5">
+          <AuthStatus />
+        </div>
 
         <div className="mt-7 space-y-4">
           <AIHeroCard />

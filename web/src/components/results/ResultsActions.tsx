@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getStoredVehicleAnalysis } from "@/lib/analysisSession";
 import { getStoredScanImage } from "@/lib/scanSession";
-import { saveScan } from "@/services/scans/saveScan";
+import { AuthRequiredError, saveScan } from "@/services/scans/saveScan";
 
 type SaveState = "idle" | "saving" | "success" | "error";
 
 export function ResultsActions() {
+  const router = useRouter();
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [toastMessage, setToastMessage] = useState<string>();
 
@@ -40,6 +42,11 @@ export function ResultsActions() {
       setSaveState("success");
       setToastMessage("Scan saved successfully.");
     } catch (error) {
+      if (error instanceof AuthRequiredError) {
+        router.push("/login?redirectTo=/results");
+        return;
+      }
+
       setSaveState("error");
       setToastMessage(
         error instanceof Error ? error.message : "Unable to save scan. Try again.",

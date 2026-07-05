@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthStatus } from "@/components/auth/AuthStatus";
 
 export default function ProfilePage() {
   return (
@@ -9,9 +10,11 @@ export default function ProfilePage() {
         </p>
         <h1 className="mt-3 text-3xl font-bold">Abdi</h1>
         <p className="mt-3 text-sm leading-6 text-slate-500">
-          Account settings and authentication details will live here when Supabase
-          Auth is connected.
+          Manage your CarLens account session.
         </p>
+        <div className="mt-6">
+          <AuthStatus />
+        </div>
         <Link
           href="/"
           className="mt-6 inline-flex rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

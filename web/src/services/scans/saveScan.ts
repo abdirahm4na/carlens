@@ -14,6 +14,13 @@ type SaveScanResult = {
   imageUrl: string;
 };
 
+export class AuthRequiredError extends Error {
+  constructor() {
+    super("You need to sign in before saving a scan.");
+    this.name = "AuthRequiredError";
+  }
+}
+
 // Saves the current scan for the signed-in user by uploading the image first and
 // then inserting the scan metadata row. The DB policies enforce user ownership.
 export async function saveScan({
@@ -31,7 +38,7 @@ export async function saveScan({
   }
 
   if (!user) {
-    throw new Error("You need to sign in before saving a scan.");
+    throw new AuthRequiredError();
   }
 
   const imageFile = dataUrlToFile(imageDataUrl, "vehicle-scan.jpg");
