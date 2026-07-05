@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { type VehicleAnalysis } from "@/types/vehicle";
 import { ChatInputBar } from "./ChatInputBar";
 import { ChatMessageBubble } from "./ChatMessageBubble";
-import { type ChatVehicleContext } from "./VehicleContextCard";
 import { type ChatMessage } from "./types";
 
 const initialMessages: ChatMessage[] = [
@@ -11,29 +11,20 @@ const initialMessages: ChatMessage[] = [
     id: "ai-intro",
     role: "assistant",
     content:
-      "I found a 2023 Porsche 911 Carrera S. Ask me about reliability, ownership costs, options, or what to inspect before buying.",
-  },
-  {
-    id: "user-sample",
-    role: "user",
-    content: "Is this a good used car to buy?",
-  },
-  {
-    id: "ai-sample",
-    role: "assistant",
-    content:
-      "Potentially, yes. The 911 Carrera S is strong on long-term desirability, but maintenance history, tire condition, brake wear, and accident records matter a lot at this price point.",
+      "Ask me about reliability, market value, specs, common issues, or what to inspect before buying.",
   },
 ];
 
 type ChatPanelProps = {
-  vehicle: ChatVehicleContext;
+  vehicleAnalysis?: VehicleAnalysis;
+  imageDataUrl?: string;
 };
 
-export function ChatPanel({ vehicle }: ChatPanelProps) {
+export function ChatPanel({ vehicleAnalysis, imageDataUrl }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const nextMessageId = useRef(initialMessages.length);
 
   function createMessageId() {
@@ -41,7 +32,7 @@ export function ChatPanel({ vehicle }: ChatPanelProps) {
     return `message-${nextMessageId.current}`;
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const trimmedDraft = draft.trim();
 
     if (!trimmedDraft || isSending) {
@@ -57,17 +48,39 @@ export function ChatPanel({ vehicle }: ChatPanelProps) {
     setMessages((currentMessages) => [...currentMessages, userMessage]);
     setDraft("");
     setIsSending(true);
+    setErrorMessage(undefined);
 
-    window.setTimeout(() => {
+    try {
+      const nextMessages = [...messages, userMessage];
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages,
+          vehicleAnalysis,
+          imageDataUrl,
+        }),
+      });
+      const body: unknown = await response.json();
+
+      if (!response.ok) {
+        throw new Error(getErrorMessage(body));
+      }
+
       const aiMessage: ChatMessage = {
         id: createMessageId(),
         role: "assistant",
-        content: buildFakeResponse(trimmedDraft, vehicle),
+        content: getResponseMessage(body),
       };
 
       setMessages((currentMessages) => [...currentMessages, aiMessage]);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to get an AI response.",
+      );
+    } finally {
       setIsSending(false);
-    }, 900);
+    }
   }
 
   return (
@@ -84,6 +97,12 @@ export function ChatPanel({ vehicle }: ChatPanelProps) {
             </div>
           </div>
         ) : null}
+
+        {errorMessage ? (
+          <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700 ring-1 ring-red-200">
+            {errorMessage}
+          </div>
+        ) : null}
       </div>
 
       <ChatInputBar
@@ -96,6 +115,26 @@ export function ChatPanel({ vehicle }: ChatPanelProps) {
   );
 }
 
-function buildFakeResponse(question: string, vehicle: ChatVehicleContext) {
-  return `For this ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}, I would focus on service records, brake and tire wear, options, and whether the asking price fits the estimated ${vehicle.estimatedMarketValue} range. Your question was: "${question}"`;
+function getResponseMessage(value: unknown) {
+  if (
+    value &&
+    typeof value === "object" &&
+    typeof (value as Record<string, unknown>).message === "string"
+  ) {
+    return (value as { message: string }).message;
+  }
+
+  throw new Error("AI response was not valid.");
+}
+
+function getErrorMessage(value: unknown) {
+  if (
+    value &&
+    typeof value === "object" &&
+    typeof (value as Record<string, unknown>).error === "string"
+  ) {
+    return (value as { error: string }).error;
+  }
+
+  return "Unable to get an AI response.";
 }
