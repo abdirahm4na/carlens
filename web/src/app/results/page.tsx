@@ -3,10 +3,10 @@ import { ResultsActions } from "@/components/results/ResultsActions";
 import { ResultsHeader } from "@/components/results/ResultsHeader";
 import { SpecsGrid, type VehicleSpec } from "@/components/results/SpecsGrid";
 import { type VehicleSummary } from "@/components/results/VehicleSummaryCard";
-import { VehicleSummaryWithStoredImage } from "@/components/results/VehicleSummaryWithStoredImage";
+import { VehicleSummaryWithSessionData } from "@/components/results/VehicleSummaryWithSessionData";
 
-const vehicle: VehicleSummary = {
-  year: 2023,
+const fallbackVehicle: VehicleSummary = {
+  year: "2023",
   make: "Porsche",
   model: "911",
   trim: "Carrera S",
@@ -52,7 +52,7 @@ export default function ResultsPage() {
         <ResultsHeader />
 
         <div className="mt-8 space-y-6">
-          <VehicleSummaryWithStoredImage vehicle={vehicle} />
+          <VehicleSummaryWithSessionData fallbackVehicle={fallbackVehicle} />
           <SpecsGrid specs={specs} />
           <CommonIssuesAccordion issues={commonIssues} />
           <ResultsActions />

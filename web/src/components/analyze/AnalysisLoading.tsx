@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { isVehicleAnalysis, storeVehicleAnalysis } from "@/lib/analysisSession";
 import {
   getServerStoredScanImage,
   getStoredScanImage,
@@ -26,8 +27,10 @@ export function AnalysisLoading() {
     getServerStoredScanImage,
   );
   const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("Starting mock analysis...");
 
   useEffect(() => {
+    let isActive = true;
     const startedAt = Date.now();
 
     const progressInterval = window.setInterval(() => {
@@ -36,13 +39,38 @@ export function AnalysisLoading() {
       setProgress(nextProgress);
     }, 120);
 
-    const redirectTimer = window.setTimeout(() => {
-      router.push("/results");
-    }, ANALYSIS_DURATION_MS);
+    async function runAnalysis() {
+      try {
+        const storedImage = getStoredScanImage();
+        const [analysis] = await Promise.all([
+          requestVehicleAnalysis(storedImage),
+          wait(ANALYSIS_DURATION_MS),
+        ]);
+
+        if (!isActive) {
+          return;
+        }
+
+        storeVehicleAnalysis(analysis);
+        setProgress(100);
+        setStatusMessage("Analysis complete. Opening results...");
+        router.push("/results");
+      } catch {
+        if (!isActive) {
+          return;
+        }
+
+        setProgress(100);
+        setStatusMessage("Analysis unavailable. Opening fallback results...");
+        router.push("/results");
+      }
+    }
+
+    void runAnalysis();
 
     return () => {
+      isActive = false;
       window.clearInterval(progressInterval);
-      window.clearTimeout(redirectTimer);
     };
   }, [router]);
 
@@ -96,8 +124,7 @@ export function AnalysisLoading() {
             Analyzing vehicle
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            We are preparing a placeholder analysis flow. Real OpenAI detection will be
-            connected later.
+            {statusMessage}
           </p>
 
           <div className="mt-6">
@@ -149,6 +176,52 @@ export function AnalysisLoading() {
       </section>
     </div>
   );
+}
+
+async function requestVehicleAnalysis(imageSrc?: string) {
+  const formData = new FormData();
+
+  if (imageSrc) {
+    const imageFile = dataUrlToFile(imageSrc, "vehicle-upload.jpg");
+    formData.append("image", imageFile);
+  }
+
+  const response = await fetch("/api/analyze", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Vehicle analysis request failed.");
+  }
+
+  const analysis: unknown = await response.json();
+
+  if (!isVehicleAnalysis(analysis)) {
+    throw new Error("Vehicle analysis response was not valid.");
+  }
+
+  return analysis;
+}
+
+function dataUrlToFile(dataUrl: string, fileName: string) {
+  const [metadata, base64Data] = dataUrl.split(",");
+
+  if (!base64Data) {
+    throw new Error("Image data URL is not valid.");
+  }
+
+  const mimeType = metadata.match(/data:(.*);base64/)?.[1] ?? "image/jpeg";
+  const binaryString = window.atob(base64Data);
+  const bytes = Uint8Array.from(binaryString, (character) => character.charCodeAt(0));
+
+  return new File([bytes], fileName, { type: mimeType });
+}
+
+function wait(durationMs: number) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, durationMs);
+  });
 }
 
 function PlaceholderVehicle() {

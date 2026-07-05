@@ -1,13 +1,14 @@
 import Image from "next/image";
 
 export type VehicleSummary = {
-  year: number;
+  year: string;
   make: string;
   model: string;
   trim: string;
   confidenceScore: number;
   reliabilityScore: number;
   estimatedMarketValue: string;
+  summary?: string;
 };
 
 type VehicleSummaryCardProps = {
@@ -49,6 +50,9 @@ export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProp
             {vehicle.make} {vehicle.model}
           </h2>
           <p className="mt-1 text-lg font-semibold text-slate-500">{vehicle.trim}</p>
+          {vehicle.summary ? (
+            <p className="mt-4 text-sm leading-6 text-slate-500">{vehicle.summary}</p>
+          ) : null}
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <ScoreTile label="Confidence" value={`${vehicle.confidenceScore}%`} />
