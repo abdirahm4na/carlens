@@ -92,7 +92,7 @@ export function VehicleUploadDropzone() {
     try {
       const imageDataUrl = await readFileAsDataUrl(selectedImage.file);
       sessionStorage.setItem(SCAN_IMAGE_SESSION_KEY, imageDataUrl);
-      router.push("/results");
+      router.push("/analyze");
     } catch {
       setErrorMessage("We could not prepare that image. Try uploading it again.");
       setIsContinuing(false);
