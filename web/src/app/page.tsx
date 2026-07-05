@@ -1,14 +1,12 @@
 import { AuthStatus } from "@/components/auth/AuthStatus";
 import { AIHeroCard } from "@/components/home/AIHeroCard";
-import { BottomNavigation } from "@/components/home/BottomNavigation";
 import { GreetingSection } from "@/components/home/GreetingSection";
-import { NegotiatorFeatureCard } from "@/components/home/NegotiatorFeatureCard";
+import { HomeFeatureGrid } from "@/components/home/HomeFeatureGrid";
 import { RecentScansSection, type RecentScan } from "@/components/home/RecentScansSection";
 import {
   TrendingVehiclesSection,
   type TrendingVehicle,
 } from "@/components/home/TrendingVehiclesSection";
-import { UploadPhotoCard } from "@/components/home/UploadPhotoCard";
 
 const recentScans: RecentScan[] = [
   {
@@ -59,15 +57,13 @@ export default function Home() {
 
         <div className="mt-7 space-y-4">
           <AIHeroCard />
-          <UploadPhotoCard />
-          <NegotiatorFeatureCard />
         </div>
+
+        <HomeFeatureGrid />
 
         <RecentScansSection scans={recentScans} />
         <TrendingVehiclesSection vehicles={trendingVehicles} />
       </div>
-
-      <BottomNavigation />
     </main>
   );
 }
