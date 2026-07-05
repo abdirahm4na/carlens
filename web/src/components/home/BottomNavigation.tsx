@@ -16,7 +16,7 @@ export function BottomNavigation() {
   return (
     <nav
       aria-label="Primary navigation"
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 px-5 pb-5 pt-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200/80 bg-white/90 px-5 pb-5 pt-3 shadow-[0_-18px_50px_rgba(15,23,42,0.10)] backdrop-blur-xl"
     >
       <div className="mx-auto grid max-w-md grid-cols-4 gap-2">
         {navItems.map((item) => {
@@ -28,7 +28,7 @@ export function BottomNavigation() {
               key={item.label}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
-              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl text-xs font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                 isActive
                   ? "bg-blue-50 text-blue-700"
                   : "text-slate-400 hover:bg-slate-50 hover:text-slate-700"

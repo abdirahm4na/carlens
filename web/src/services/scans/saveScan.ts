@@ -1,4 +1,7 @@
-import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import {
+  createBrowserSupabaseClient,
+  SupabaseNotConfiguredError,
+} from "@/lib/supabase/client";
 import { type VehicleAnalysis } from "@/types/vehicle";
 
 const VEHICLE_SCANS_BUCKET =
@@ -21,13 +24,30 @@ export class AuthRequiredError extends Error {
   }
 }
 
+export class SaveScanSetupRequiredError extends Error {
+  constructor() {
+    super("Supabase not configured yet. Add your Supabase URL and anon key to .env.local.");
+    this.name = "SaveScanSetupRequiredError";
+  }
+}
+
 // Saves the current scan for the signed-in user by uploading the image first and
 // then inserting the scan metadata row. The DB policies enforce user ownership.
 export async function saveScan({
   imageDataUrl,
   vehicleAnalysis,
 }: SaveScanInput): Promise<SaveScanResult> {
-  const supabase = createBrowserSupabaseClient();
+  let supabase: ReturnType<typeof createBrowserSupabaseClient>;
+
+  try {
+    supabase = createBrowserSupabaseClient();
+  } catch (error) {
+    if (error instanceof SupabaseNotConfiguredError) {
+      throw new SaveScanSetupRequiredError();
+    }
+
+    throw error;
+  }
   const {
     data: { user },
     error: userError,

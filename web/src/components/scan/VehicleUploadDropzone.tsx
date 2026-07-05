@@ -144,10 +144,10 @@ export function VehicleUploadDropzone() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`cursor-pointer rounded-[2rem] border-2 border-dashed bg-white p-5 shadow-sm transition ${
+        className={`cursor-pointer rounded-[2rem] border-2 border-dashed bg-white/90 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur transition duration-300 ${
           isDragging
-            ? "border-blue-500 bg-blue-50 shadow-lg"
-            : "border-slate-300 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-lg"
+            ? "border-blue-500 bg-blue-50 shadow-[0_24px_70px_rgba(37,99,235,0.16)]"
+            : "border-slate-300 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-[0_24px_70px_rgba(15,23,42,0.11)]"
         }`}
       >
         {selectedImages.length > 0 ? (
@@ -157,7 +157,7 @@ export function VehicleUploadDropzone() {
             <div className="flex size-20 items-center justify-center rounded-3xl bg-blue-50 text-blue-600">
               <UploadIcon />
             </div>
-            <h2 className="mt-6 text-2xl font-bold tracking-normal text-slate-950">
+            <h2 className="mt-6 text-3xl font-semibold tracking-normal text-slate-950">
               Upload vehicle photos
             </h2>
             <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
@@ -177,7 +177,7 @@ export function VehicleUploadDropzone() {
               openFilePicker();
             }}
             disabled={selectedImages.length >= MAX_IMAGES}
-            className="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/15 transition enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-[0_14px_30px_rgba(37,99,235,0.22)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Add photos
           </button>
@@ -188,7 +188,7 @@ export function VehicleUploadDropzone() {
         type="button"
         disabled={selectedImages.length === 0 || isContinuing}
         onClick={handleContinue}
-        className="mt-5 flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-blue-900/15 transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="mt-5 flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-[0_18px_38px_rgba(37,99,235,0.24)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         {isContinuing ? "Preparing..." : "Continue"}
       </button>
@@ -214,7 +214,7 @@ function SelectedImageGrid({
       {images.map((image, index) => (
         <div
           key={image.id}
-          className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100 ring-1 ring-slate-200"
+          className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
         >
           <Image
             src={image.previewUrl}

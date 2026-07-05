@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   HistoryAuthRequiredError,
+  HistorySetupRequiredError,
   listSavedScans,
   type SavedScan,
 } from "@/services/scans/history";
@@ -41,6 +42,12 @@ export function HistoryList() {
           return;
         }
 
+        if (error instanceof HistorySetupRequiredError) {
+          setErrorMessage(error.message);
+          setStatus("empty");
+          return;
+        }
+
         setErrorMessage(
           error instanceof Error ? error.message : "Unable to load scan history.",
         );
@@ -56,7 +63,7 @@ export function HistoryList() {
   }, [router]);
 
   if (status === "loading") {
-    return <StatePanel title="Loading scans" body="Fetching your saved vehicle history." />;
+    return <HistorySkeleton />;
   }
 
   if (status === "error") {
@@ -72,7 +79,7 @@ export function HistoryList() {
     return (
       <StatePanel
         title="No saved scans yet"
-        body="Analyze a vehicle and press Save Scan to build your history."
+        body={errorMessage ?? "Analyze a vehicle and press Save Scan to build your history."}
       />
     );
   }
@@ -83,7 +90,7 @@ export function HistoryList() {
         <Link
           key={scan.id}
           href={`/history/${scan.id}`}
-          className="grid gap-4 rounded-[2rem] bg-white p-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg sm:grid-cols-[10rem_1fr]"
+          className="grid gap-4 rounded-[2rem] bg-white/95 p-4 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(15,23,42,0.11)] sm:grid-cols-[10rem_1fr]"
         >
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-slate-100">
             <Image
@@ -125,10 +132,37 @@ export function HistoryList() {
 
 function StatePanel({ title, body }: { title: string; body: string }) {
   return (
-    <section className="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-[2rem] bg-white/95 p-6 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80">
       <h2 className="text-xl font-bold text-slate-950">{title}</h2>
       <p className="mt-2 text-sm leading-6 text-slate-500">{body}</p>
     </section>
+  );
+}
+
+function HistorySkeleton() {
+  return (
+    <div className="space-y-4">
+      {[0, 1, 2].map((item) => (
+        <div
+          key={item}
+          className="grid gap-4 overflow-hidden rounded-[2rem] bg-white/95 p-4 shadow-sm ring-1 ring-slate-200/80 sm:grid-cols-[10rem_1fr]"
+        >
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-slate-100">
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent animate-[shimmer_1.4s_infinite]" />
+          </div>
+          <div className="space-y-3 py-1">
+            <div className="h-3 w-24 rounded-full bg-slate-100" />
+            <div className="h-6 w-3/4 rounded-full bg-slate-100" />
+            <div className="h-4 w-1/2 rounded-full bg-slate-100" />
+            <div className="grid grid-cols-3 gap-2">
+              <div className="h-14 rounded-2xl bg-slate-100" />
+              <div className="h-14 rounded-2xl bg-slate-100" />
+              <div className="h-14 rounded-2xl bg-slate-100" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 

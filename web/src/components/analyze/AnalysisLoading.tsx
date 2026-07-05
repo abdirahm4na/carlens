@@ -94,7 +94,7 @@ export function AnalysisLoading() {
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-2xl flex-col justify-center">
-      <section className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-200">
+      <section className="overflow-hidden rounded-[2rem] bg-white/95 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80 backdrop-blur">
         <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-sky-300 via-blue-600 to-slate-950">
           {imageSrc ? (
             <Image
@@ -122,7 +122,7 @@ export function AnalysisLoading() {
           <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
             AI Analysis
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
+          <h1 className="mt-2 text-4xl font-semibold tracking-normal text-slate-950">
             Analyzing vehicle
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
@@ -139,7 +139,7 @@ export function AnalysisLoading() {
               <span>Progress</span>
               <span>{progress}%</span>
             </div>
-            <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-3 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200/70">
               <div
                 className="h-full rounded-full bg-blue-600 transition-[width] duration-150"
                 style={{ width: `${progress}%` }}
@@ -155,7 +155,7 @@ export function AnalysisLoading() {
               return (
                 <li
                   key={step}
-                  className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200"
+                  className="flex items-center gap-3 rounded-2xl bg-slate-50/90 p-3 ring-1 ring-slate-200 transition"
                 >
                   <span
                     className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${

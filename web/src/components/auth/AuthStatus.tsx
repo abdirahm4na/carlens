@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { type User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import {
+  createBrowserSupabaseClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/client";
 import { logout } from "@/services/auth/auth";
 
 export function AuthStatus() {
@@ -12,6 +15,11 @@ export function AuthStatus() {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      queueMicrotask(() => setIsLoading(false));
+      return;
+    }
+
     const supabase = createBrowserSupabaseClient();
     let isMounted = true;
 
@@ -61,14 +69,28 @@ export function AuthStatus() {
 
   if (isLoading) {
     return (
-      <section className="rounded-3xl bg-white p-4 text-sm font-bold text-slate-500 shadow-sm ring-1 ring-slate-200">
-        Checking account...
+      <section className="relative overflow-hidden rounded-[1.75rem] bg-white p-4 text-sm font-bold text-slate-500 shadow-sm ring-1 ring-slate-200">
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-slate-100 to-transparent animate-[shimmer_1.4s_infinite]" />
+        <span className="relative">Checking account...</span>
+      </section>
+    );
+  }
+
+  if (!isSupabaseConfigured()) {
+    return (
+      <section className="rounded-[1.75rem] bg-white/90 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 backdrop-blur">
+        <p className="text-xs font-bold uppercase tracking-normal text-slate-500">
+          Local setup
+        </p>
+        <p className="mt-1 text-sm font-bold text-slate-950">
+          Supabase not configured.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-[1.75rem] bg-white/90 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 backdrop-blur">
       {user ? (
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">

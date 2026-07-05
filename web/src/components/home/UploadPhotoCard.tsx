@@ -28,7 +28,7 @@ export function UploadPhotoCard() {
       <button
         type="button"
         onClick={openPhotoPicker}
-        className="group flex w-full items-center gap-4 rounded-3xl bg-white p-4 text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="group flex w-full items-center gap-4 rounded-[1.75rem] bg-white/90 p-4 text-left shadow-[0_14px_34px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(15,23,42,0.09)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-blue-600 transition group-hover:bg-blue-50">
           <UploadIcon />

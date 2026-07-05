@@ -1,4 +1,7 @@
-import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import {
+  createBrowserSupabaseClient,
+  SupabaseNotConfiguredError,
+} from "@/lib/supabase/client";
 import { isVehicleAnalysis } from "@/lib/analysisSession";
 import { type VehicleAnalysis } from "@/types/vehicle";
 
@@ -27,8 +30,15 @@ export class HistoryAuthRequiredError extends Error {
   }
 }
 
+export class HistorySetupRequiredError extends Error {
+  constructor() {
+    super("Supabase not configured yet. Add public Supabase env vars to view saved scans.");
+    this.name = "HistorySetupRequiredError";
+  }
+}
+
 export async function listSavedScans() {
-  const supabase = createBrowserSupabaseClient();
+  const supabase = createScansSupabaseClient();
   const user = await getCurrentUserId(supabase);
   const { data, error } = await supabase
     .from("scans")
@@ -44,7 +54,7 @@ export async function listSavedScans() {
 }
 
 export async function getSavedScanById(scanId: string) {
-  const supabase = createBrowserSupabaseClient();
+  const supabase = createScansSupabaseClient();
   const user = await getCurrentUserId(supabase);
   const { data, error } = await supabase
     .from("scans")
@@ -58,6 +68,18 @@ export async function getSavedScanById(scanId: string) {
   }
 
   return toSavedScan(data);
+}
+
+function createScansSupabaseClient() {
+  try {
+    return createBrowserSupabaseClient();
+  } catch (error) {
+    if (error instanceof SupabaseNotConfiguredError) {
+      throw new HistorySetupRequiredError();
+    }
+
+    throw error;
+  }
 }
 
 async function getCurrentUserId(supabase: ReturnType<typeof createBrowserSupabaseClient>) {

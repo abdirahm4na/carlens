@@ -84,7 +84,7 @@ export function ChatPanel({ vehicleAnalysis, imageDataUrl }: ChatPanelProps) {
   }
 
   return (
-    <section className="flex min-h-[32rem] flex-col rounded-[2rem] bg-white/60 p-4 ring-1 ring-slate-200">
+    <section className="flex min-h-[32rem] flex-col rounded-[2rem] bg-white/85 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-slate-200/80 backdrop-blur">
       <div className="flex-1 space-y-3 overflow-y-auto pr-1">
         {messages.map((message) => (
           <ChatMessageBubble key={message.id} message={message} />
@@ -92,8 +92,12 @@ export function ChatPanel({ vehicleAnalysis, imageDataUrl }: ChatPanelProps) {
 
         {isSending ? (
           <div className="flex justify-start">
-            <div className="rounded-3xl rounded-bl-lg bg-white px-4 py-3 text-sm font-semibold text-slate-500 ring-1 ring-slate-200">
-              Thinking...
+            <div className="rounded-3xl rounded-bl-lg bg-white px-4 py-3 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-slate-200">
+              <span className="inline-flex items-center gap-1">
+                <span className="size-1.5 rounded-full bg-blue-500 animate-pulse" />
+                <span className="size-1.5 rounded-full bg-blue-500 animate-pulse [animation-delay:120ms]" />
+                <span className="size-1.5 rounded-full bg-blue-500 animate-pulse [animation-delay:240ms]" />
+              </span>
             </div>
           </div>
         ) : null}

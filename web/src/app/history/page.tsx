@@ -3,7 +3,7 @@ import { HistoryList } from "@/components/history/HistoryList";
 
 export default function HistoryPage() {
   return (
-    <main className="min-h-screen bg-[#F5F7FB] px-5 py-8 text-slate-950 sm:px-6">
+    <main className="min-h-screen bg-[#F5F7FB] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
       <div className="mx-auto w-full max-w-3xl">
         <header className="flex items-start justify-between gap-4">
           <div>

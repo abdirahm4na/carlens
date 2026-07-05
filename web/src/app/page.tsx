@@ -2,6 +2,7 @@ import { AuthStatus } from "@/components/auth/AuthStatus";
 import { AIHeroCard } from "@/components/home/AIHeroCard";
 import { BottomNavigation } from "@/components/home/BottomNavigation";
 import { GreetingSection } from "@/components/home/GreetingSection";
+import { NegotiatorFeatureCard } from "@/components/home/NegotiatorFeatureCard";
 import { RecentScansSection, type RecentScan } from "@/components/home/RecentScansSection";
 import {
   TrendingVehiclesSection,
@@ -50,7 +51,7 @@ const trendingVehicles: TrendingVehicle[] = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#F5F7FB] text-slate-950">
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-28 pt-8 sm:px-6">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-28 pt-7 sm:px-6 sm:pt-10">
         <GreetingSection greeting="Good morning" userName="Abdi" />
         <div className="mt-5">
           <AuthStatus />
@@ -59,6 +60,7 @@ export default function Home() {
         <div className="mt-7 space-y-4">
           <AIHeroCard />
           <UploadPhotoCard />
+          <NegotiatorFeatureCard />
         </div>
 
         <RecentScansSection scans={recentScans} />

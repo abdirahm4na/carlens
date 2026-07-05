@@ -20,7 +20,7 @@ export function VehicleSummaryCard({
 
   return (
     <article className="space-y-5">
-      <section className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-200">
+      <section className="overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.12)] ring-1 ring-slate-200/80">
         <div className="relative min-h-80 bg-gradient-to-br from-sky-300 via-blue-600 to-slate-950">
           {imageSrc ? (
             <Image
@@ -39,7 +39,7 @@ export function VehicleSummaryCard({
             <p className="text-xs font-bold uppercase tracking-normal text-blue-100">
               Premium AI Inspection Report
             </p>
-            <h2 className="mt-2 text-4xl font-bold tracking-normal">
+            <h2 className="mt-2 text-4xl font-semibold tracking-normal">
               {title || "Vehicle not identified"}
             </h2>
             <p className="mt-1 text-lg font-semibold text-slate-200">
@@ -161,11 +161,11 @@ function ReportSection({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+    <section className="rounded-[2rem] bg-white/95 p-5 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 backdrop-blur sm:p-6">
       <p className="text-xs font-bold uppercase tracking-normal text-blue-600">
         {eyebrow}
       </p>
-      <h3 className="mt-2 text-2xl font-bold tracking-normal text-slate-950">{title}</h3>
+      <h3 className="mt-2 text-2xl font-semibold tracking-normal text-slate-950">{title}</h3>
       {body ? <p className="mt-3 text-sm leading-6 text-slate-500">{body}</p> : null}
       {children ? <div className="mt-5">{children}</div> : null}
     </section>
@@ -188,7 +188,7 @@ function ScoreCard({
   }[tone];
 
   return (
-    <div className={`rounded-3xl p-4 shadow-sm ring-1 ${toneClassName}`}>
+    <div className={`rounded-3xl p-4 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md ${toneClassName}`}>
       <p className="text-xs font-bold uppercase tracking-normal">{label}</p>
       <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/80">
@@ -200,7 +200,7 @@ function ScoreCard({
 
 function ValueCard({ value }: { value: string }) {
   return (
-    <div className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <div className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md">
       <p className="text-xs font-bold uppercase tracking-normal text-slate-500">
         Estimated Market Value
       </p>
@@ -213,7 +213,7 @@ function ValueCard({ value }: { value: string }) {
 
 function DetailTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
+    <div className="rounded-3xl bg-slate-50/90 p-4 ring-1 ring-slate-200 transition hover:bg-white">
       <p className="text-xs font-bold uppercase tracking-normal text-slate-500">{label}</p>
       <p className="mt-2 text-sm font-bold leading-5 text-slate-950">
         {value || "Unknown"}
@@ -225,7 +225,7 @@ function DetailTile({ label, value }: { label: string; value: string }) {
 function ListTile({ emptyLabel, items }: { emptyLabel: string; items: string[] }) {
   if (items.length === 0) {
     return (
-      <div className="rounded-3xl bg-slate-50 p-4 text-sm font-bold leading-6 text-slate-500 ring-1 ring-slate-200">
+      <div className="rounded-3xl bg-slate-50/90 p-4 text-sm font-bold leading-6 text-slate-500 ring-1 ring-slate-200">
         {emptyLabel}
       </div>
     );
@@ -236,7 +236,7 @@ function ListTile({ emptyLabel, items }: { emptyLabel: string; items: string[] }
       {items.map((item) => (
         <li
           key={item}
-          className="rounded-3xl bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-950 ring-1 ring-slate-200"
+          className="rounded-3xl bg-slate-50/90 p-4 text-sm font-semibold leading-6 text-slate-950 ring-1 ring-slate-200 transition hover:bg-white"
         >
           {item}
         </li>
@@ -270,7 +270,10 @@ function calculateBuyerScore(vehicle: VehicleAnalysis) {
 
 function calculateConditionScore(vehicle: VehicleAnalysis) {
   const modificationPenalty = Math.min(vehicle.visible_modifications.length * 5, 20);
-  return clampScore(Math.round(vehicle.confidence * 0.45 + vehicle.reliability * 0.45 + 10) - modificationPenalty);
+  return clampScore(
+    Math.round(vehicle.confidence * 0.45 + vehicle.reliability * 0.45 + 10) -
+      modificationPenalty,
+  );
 }
 
 function clampScore(value: number) {

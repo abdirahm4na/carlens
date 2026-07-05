@@ -10,7 +10,7 @@ export function VehicleContextCard({ vehicle }: VehicleContextCardProps) {
     : "AI";
 
   return (
-    <section className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-[2rem] bg-white/95 p-5 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 backdrop-blur">
       <div className="flex items-center gap-4">
         <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-sm font-bold text-blue-700">
           {initials}

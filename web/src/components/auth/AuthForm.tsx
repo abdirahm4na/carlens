@@ -7,6 +7,7 @@ import {
   loginWithEmailPassword,
   signUpWithEmailPassword,
 } from "@/services/auth/auth";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 type AuthMode = "login" | "signup";
 
@@ -24,11 +25,17 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [message, setMessage] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const isLogin = mode === "login";
+  const isConfigured = isSupabaseConfigured();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (isSubmitting) {
+      return;
+    }
+
+    if (!isConfigured) {
+      setErrorMessage("Supabase not configured yet. Add public Supabase env vars to enable auth.");
       return;
     }
 
@@ -61,11 +68,11 @@ export function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="mx-auto w-full max-w-md rounded-[2rem] bg-white/95 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80 backdrop-blur sm:p-8">
       <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
         {isLogin ? "Welcome back" : "Create account"}
       </p>
-      <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
+      <h1 className="mt-2 text-4xl font-semibold tracking-normal text-slate-950">
         {isLogin ? "Log in" : "Sign up"}
       </h1>
       <p className="mt-2 text-sm leading-6 text-slate-500">
@@ -83,7 +90,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             onChange={(event) => setEmail(event.target.value)}
             required
             autoComplete="email"
-            className="mt-2 min-h-12 w-full rounded-2xl bg-slate-50 px-4 text-sm font-medium text-slate-950 ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-2 min-h-12 w-full rounded-2xl bg-slate-50/80 px-4 text-sm font-medium text-slate-950 ring-1 ring-slate-200 transition placeholder:text-slate-400 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="you@example.com"
           />
         </label>
@@ -97,7 +104,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             required
             minLength={6}
             autoComplete={isLogin ? "current-password" : "new-password"}
-            className="mt-2 min-h-12 w-full rounded-2xl bg-slate-50 px-4 text-sm font-medium text-slate-950 ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-2 min-h-12 w-full rounded-2xl bg-slate-50/80 px-4 text-sm font-medium text-slate-950 ring-1 ring-slate-200 transition placeholder:text-slate-400 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="At least 6 characters"
           />
         </label>
@@ -105,11 +112,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="min-h-12 w-full rounded-full bg-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-blue-900/15 transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="min-h-12 w-full rounded-full bg-blue-600 px-5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(37,99,235,0.24)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           {isSubmitting ? "Working..." : isLogin ? "Log in" : "Create account"}
         </button>
       </form>
+
+      {!isConfigured ? (
+        <p className="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 ring-1 ring-blue-100">
+          Supabase not configured yet. Auth is disabled in this local setup.
+        </p>
+      ) : null}
 
       {message ? (
         <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200">

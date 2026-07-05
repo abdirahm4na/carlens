@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getStoredVehicleAnalysis } from "@/lib/analysisSession";
 import { getStoredScanImage } from "@/lib/scanSession";
-import { AuthRequiredError, saveScan } from "@/services/scans/saveScan";
+import {
+  AuthRequiredError,
+  saveScan,
+  SaveScanSetupRequiredError,
+} from "@/services/scans/saveScan";
 
 type SaveState = "idle" | "saving" | "success" | "error";
 
@@ -44,6 +48,12 @@ export function ResultsActions() {
     } catch (error) {
       if (error instanceof AuthRequiredError) {
         router.push("/login?redirectTo=/results");
+        return;
+      }
+
+      if (error instanceof SaveScanSetupRequiredError) {
+        setSaveState("error");
+        setToastMessage(error.message);
         return;
       }
 
