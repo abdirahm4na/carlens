@@ -22,5 +22,5 @@ export type VehicleAnalysis = {
 // This input type leaves room for the API route to pass an uploaded image later
 // without coupling the rest of the app to FormData implementation details.
 export type VehicleAnalysisInput = {
-  image: File;
+  images: File[];
 };

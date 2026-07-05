@@ -2,13 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isVehicleAnalysis, storeVehicleAnalysis } from "@/lib/analysisSession";
-import {
-  getServerStoredScanImage,
-  getStoredScanImage,
-  subscribeToScanImageStorage,
-} from "@/lib/scanSession";
+import { getStoredScanImages } from "@/lib/scanSession";
 
 const ANALYSIS_DURATION_MS = 3600;
 
@@ -21,17 +17,24 @@ const checklistSteps = [
 
 export function AnalysisLoading() {
   const router = useRouter();
-  const imageSrc = useSyncExternalStore(
-    subscribeToScanImageStorage,
-    getStoredScanImage,
-    getServerStoredScanImage,
-  );
+  const [imageSrc, setImageSrc] = useState<string>();
+  const [photoCount, setPhotoCount] = useState(0);
   const [progress, setProgress] = useState(0);
   const [statusMessage, setStatusMessage] = useState("Starting mock analysis...");
 
   useEffect(() => {
     let isActive = true;
     const startedAt = Date.now();
+    const storedImages = getStoredScanImages();
+
+    queueMicrotask(() => {
+      if (!isActive) {
+        return;
+      }
+
+      setImageSrc(storedImages[0]);
+      setPhotoCount(storedImages.length);
+    });
 
     const progressInterval = window.setInterval(() => {
       const elapsed = Date.now() - startedAt;
@@ -41,9 +44,8 @@ export function AnalysisLoading() {
 
     async function runAnalysis() {
       try {
-        const storedImage = getStoredScanImage();
         const [analysis] = await Promise.all([
-          requestVehicleAnalysis(storedImage),
+          requestVehicleAnalysis(storedImages),
           wait(ANALYSIS_DURATION_MS),
         ]);
 
@@ -126,6 +128,11 @@ export function AnalysisLoading() {
           <p className="mt-2 text-sm leading-6 text-slate-500">
             {statusMessage}
           </p>
+          {photoCount > 1 ? (
+            <p className="mt-2 text-sm font-semibold text-blue-600">
+              Using {photoCount} photos for combined analysis.
+            </p>
+          ) : null}
 
           <div className="mt-6">
             <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-normal text-slate-500">
@@ -178,13 +185,13 @@ export function AnalysisLoading() {
   );
 }
 
-async function requestVehicleAnalysis(imageSrc?: string) {
+async function requestVehicleAnalysis(imageSources: string[]) {
   const formData = new FormData();
 
-  if (imageSrc) {
-    const imageFile = dataUrlToFile(imageSrc, "vehicle-upload.jpg");
+  imageSources.forEach((imageSrc, index) => {
+    const imageFile = dataUrlToFile(imageSrc, `vehicle-upload-${index + 1}.jpg`);
     formData.append("image", imageFile);
-  }
+  });
 
   const response = await fetch("/api/analyze", {
     method: "POST",

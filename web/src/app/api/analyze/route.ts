@@ -5,16 +5,18 @@ import { analyzeVehicle } from "@/lib/openai/analyzeVehicle";
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const image = formData.get("image");
+    const images = formData
+      .getAll("image")
+      .filter((value): value is File => value instanceof File);
 
-    if (!(image instanceof File)) {
+    if (images.length === 0) {
       return Response.json(
-        { error: "A vehicle image is required in the image form field." },
+        { error: "At least one vehicle image is required in the image form field." },
         { status: 400 },
       );
     }
 
-    const analysis = await analyzeVehicle({ image });
+    const analysis = await analyzeVehicle({ images: images.slice(0, 8) });
 
     return Response.json(analysis);
   } catch (error) {
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
 // uploaded image request, not fetched as a cacheable read endpoint.
 export function GET() {
   return Response.json(
-    { error: "Use POST with multipart form data to analyze a vehicle image." },
+    { error: "Use POST with multipart form data to analyze vehicle images." },
     { status: 405 },
   );
 }

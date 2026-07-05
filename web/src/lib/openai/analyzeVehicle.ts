@@ -13,7 +13,7 @@ export async function analyzeVehicle(
 ): Promise<VehicleAnalysis> {
   const client = createOpenAIClient();
   const { model } = getOpenAIClientConfig();
-  const imageUrl = await fileToDataUrl(input.image);
+  const imageUrls = await Promise.all(input.images.map(fileToDataUrl));
 
   const response = await client.responses.create({
     model,
@@ -21,8 +21,15 @@ export async function analyzeVehicle(
       {
         role: "user",
         content: [
-          { type: "input_text", text: buildVehicleAnalysisPrompt() },
-          { type: "input_image", image_url: imageUrl, detail: "high" },
+          {
+            type: "input_text",
+            text: `${buildVehicleAnalysisPrompt()}\n\nUse all ${imageUrls.length} uploaded photos as one combined vehicle appraisal. Treat the first photo as the primary image and use the remaining photos as supporting evidence.`,
+          },
+          ...imageUrls.map((imageUrl) => ({
+            type: "input_image" as const,
+            image_url: imageUrl,
+            detail: "high" as const,
+          })),
         ],
       },
     ],

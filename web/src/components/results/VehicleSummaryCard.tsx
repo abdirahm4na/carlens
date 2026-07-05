@@ -6,9 +6,14 @@ export type VehicleSummary = VehicleAnalysis;
 type VehicleSummaryCardProps = {
   vehicle: VehicleAnalysis;
   imageSrc?: string;
+  photoCount?: number;
 };
 
-export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProps) {
+export function VehicleSummaryCard({
+  vehicle,
+  imageSrc,
+  photoCount = 0,
+}: VehicleSummaryCardProps) {
   const title = [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ");
 
   return (
@@ -49,6 +54,11 @@ export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProp
           <p className="mt-4 text-sm leading-6 text-slate-500">
             {vehicle.summary || "No appraisal summary returned."}
           </p>
+          {photoCount > 1 ? (
+            <p className="mt-3 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 ring-1 ring-blue-100">
+              Analysis used {photoCount} uploaded photos.
+            </p>
+          ) : null}
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <ScoreTile label="Confidence" value={`${vehicle.confidence}%`} />

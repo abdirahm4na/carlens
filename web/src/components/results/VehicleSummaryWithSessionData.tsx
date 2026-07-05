@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getStoredVehicleAnalysis } from "@/lib/analysisSession";
-import { getStoredScanImage } from "@/lib/scanSession";
+import { getStoredScanImages } from "@/lib/scanSession";
 import { type VehicleAnalysis } from "@/types/vehicle";
 import {
   VehicleSummaryCard,
@@ -17,6 +17,7 @@ export function VehicleSummaryWithSessionData({
   fallbackVehicle,
 }: VehicleSummaryWithSessionDataProps) {
   const [imageSrc, setImageSrc] = useState<string>();
+  const [photoCount, setPhotoCount] = useState(0);
   const [analysis, setAnalysis] = useState<VehicleAnalysis>();
 
   useEffect(() => {
@@ -27,7 +28,9 @@ export function VehicleSummaryWithSessionData({
         return;
       }
 
-      setImageSrc(getStoredScanImage());
+      const storedImages = getStoredScanImages();
+      setImageSrc(storedImages[0]);
+      setPhotoCount(storedImages.length);
       setAnalysis(getStoredVehicleAnalysis());
     });
 
@@ -40,5 +43,11 @@ export function VehicleSummaryWithSessionData({
     ? analysis
     : fallbackVehicle;
 
-  return <VehicleSummaryCard vehicle={vehicle} imageSrc={imageSrc} />;
+  return (
+    <VehicleSummaryCard
+      vehicle={vehicle}
+      imageSrc={imageSrc}
+      photoCount={photoCount}
+    />
+  );
 }
