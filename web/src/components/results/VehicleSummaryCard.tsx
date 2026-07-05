@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export type VehicleSummary = {
   year: number;
   make: string;
@@ -10,19 +12,33 @@ export type VehicleSummary = {
 
 type VehicleSummaryCardProps = {
   vehicle: VehicleSummary;
+  imageSrc?: string;
 };
 
-export function VehicleSummaryCard({ vehicle }: VehicleSummaryCardProps) {
+export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProps) {
   return (
     <section className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-200">
       <div className="grid gap-0 md:grid-cols-[1.1fr_1fr]">
         <div className="relative min-h-64 bg-gradient-to-br from-sky-300 via-blue-600 to-slate-950">
-          <div className="absolute bottom-10 left-8 right-8 h-16 rounded-t-[4rem] bg-white/85 shadow-2xl" />
-          <div className="absolute bottom-6 left-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
-          <div className="absolute bottom-6 right-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
-          <div className="absolute left-8 top-8 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-normal text-white ring-1 ring-white/25">
-            Placeholder Image
-          </div>
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+              fill
+              unoptimized
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 396px"
+            />
+          ) : (
+            <>
+              <div className="absolute bottom-10 left-8 right-8 h-16 rounded-t-[4rem] bg-white/85 shadow-2xl" />
+              <div className="absolute bottom-6 left-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
+              <div className="absolute bottom-6 right-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
+              <div className="absolute left-8 top-8 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-normal text-white ring-1 ring-white/25">
+                Placeholder Image
+              </div>
+            </>
+          )}
         </div>
 
         <div className="p-6">

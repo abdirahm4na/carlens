@@ -2,10 +2,8 @@ import { CommonIssuesAccordion } from "@/components/results/CommonIssuesAccordio
 import { ResultsActions } from "@/components/results/ResultsActions";
 import { ResultsHeader } from "@/components/results/ResultsHeader";
 import { SpecsGrid, type VehicleSpec } from "@/components/results/SpecsGrid";
-import {
-  VehicleSummaryCard,
-  type VehicleSummary,
-} from "@/components/results/VehicleSummaryCard";
+import { type VehicleSummary } from "@/components/results/VehicleSummaryCard";
+import { VehicleSummaryWithStoredImage } from "@/components/results/VehicleSummaryWithStoredImage";
 
 const vehicle: VehicleSummary = {
   year: 2023,
@@ -54,7 +52,7 @@ export default function ResultsPage() {
         <ResultsHeader />
 
         <div className="mt-8 space-y-6">
-          <VehicleSummaryCard vehicle={vehicle} />
+          <VehicleSummaryWithStoredImage vehicle={vehicle} />
           <SpecsGrid specs={specs} />
           <CommonIssuesAccordion issues={commonIssues} />
           <ResultsActions />
