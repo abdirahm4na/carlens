@@ -50,48 +50,43 @@ export function VinDecoderPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F7FB] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
-      <div className="mx-auto w-full max-w-3xl">
+    <main className="min-h-screen bg-[#05070A] px-5 py-8 text-slate-950 sm:px-6 sm:py-12">
+      <div className="mx-auto w-full max-w-6xl">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
+            <h1 className="text-4xl font-semibold tracking-normal text-slate-950 sm:text-5xl">
               VIN Decoder
-            </p>
-            <h1 className="mt-2 text-4xl font-semibold tracking-normal text-slate-950">
-              Decode factory details
             </h1>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">
-              Enter a 17-character VIN to pull public NHTSA vehicle details and save
-              them as extra context for a future scan.
-            </p>
           </div>
 
           <Link
-            href="/"
+            href="/dashboard"
             className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Home
           </Link>
         </header>
 
-        <section className="mt-8 rounded-[2rem] bg-white/95 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80 sm:p-6">
-          <form onSubmit={handleSubmit}>
+        <section className="mt-14 grid gap-5 lg:grid-cols-[minmax(0,1fr)_24rem]">
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-[2.25rem] bg-white/90 p-6 ring-1 ring-slate-200/80 backdrop-blur sm:p-8"
+          >
             <label className="block">
-              <span className="text-sm font-bold text-slate-700">Vehicle VIN</span>
+              <span className="text-sm font-semibold text-slate-500">17-character VIN</span>
               <input
                 value={vin}
                 onChange={(event) => setVin(event.target.value.toUpperCase())}
                 maxLength={20}
-                placeholder="17-character VIN"
-                className="mt-2 min-h-14 w-full rounded-2xl bg-slate-50/80 px-4 text-lg font-bold uppercase tracking-[0.12em] text-slate-950 ring-1 ring-slate-200 transition placeholder:tracking-normal placeholder:text-slate-400 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="WBA3R1C50EK000000"
+                className="mt-5 min-h-20 w-full rounded-3xl bg-slate-50/80 px-5 text-2xl font-semibold uppercase tracking-[0.12em] text-slate-950 ring-1 ring-slate-200 transition placeholder:tracking-normal placeholder:text-slate-500 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-3xl"
               />
             </label>
 
-            <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-              <p className={isValid ? "font-bold text-emerald-600" : "font-semibold text-slate-500"}>
+            <div className="mt-4 flex items-center justify-between gap-3 text-sm">
+              <p className={isValid ? "font-semibold text-emerald-600" : "font-medium text-slate-500"}>
                 {normalizedVin.length}/17 characters
               </p>
-              <p className="font-semibold text-slate-500">No login required</p>
             </div>
 
             <button
@@ -101,7 +96,6 @@ export function VinDecoderPage() {
             >
               {status === "loading" ? "Decoding..." : "Decode VIN"}
             </button>
-          </form>
 
           {!isValid && normalizedVin.length > 0 ? (
             <p className="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 ring-1 ring-blue-100">
@@ -116,27 +110,35 @@ export function VinDecoderPage() {
               {errorMessage}
             </p>
           ) : null}
-        </section>
 
-        {result ? (
-          <section className="mt-6 rounded-[2rem] bg-white/95 p-5 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 sm:p-6">
-            <p className="text-xs font-bold uppercase tracking-normal text-blue-600">
-              Saved as future scan context
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-950">
-              {[result.year, result.make, result.model].filter(Boolean).join(" ") ||
-                "Decoded VIN"}
-            </h2>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <Detail label="VIN" value={result.vin} />
-              <Detail label="Trim" value={result.trim} />
-              <Detail label="Engine" value={result.engine} />
-              <Detail label="Body Style" value={result.body_style} />
-              <Detail label="Plant" value={result.plant} />
-              <Detail label="Manufacturer" value={result.manufacturer} />
-            </div>
-          </section>
-        ) : null}
+          </form>
+
+          <aside className="rounded-[2.25rem] bg-white/90 p-6 ring-1 ring-slate-200/80 backdrop-blur sm:p-8">
+            {result ? (
+              <>
+                <p className="text-sm font-semibold text-blue-600">Decoded</p>
+                <h2 className="mt-3 text-3xl font-semibold text-slate-950">
+                  {[result.year, result.make, result.model].filter(Boolean).join(" ") ||
+                    "Vehicle"}
+                </h2>
+                <div className="mt-8 grid gap-3">
+                  <Detail label="Trim" value={result.trim} />
+                  <Detail label="Engine" value={result.engine} />
+                  <Detail label="Body" value={result.body_style} />
+                  <Detail label="Plant" value={result.plant} />
+                  <Detail label="Manufacturer" value={result.manufacturer} />
+                </div>
+              </>
+            ) : (
+              <div className="flex h-full min-h-72 flex-col justify-between">
+                <p className="text-sm font-semibold text-slate-500">Factory data</p>
+                <p className="text-sm leading-6 text-slate-500">
+                  Decode year, make, model, trim, engine, plant, and manufacturer.
+                </p>
+              </div>
+            )}
+          </aside>
+        </section>
       </div>
     </main>
   );

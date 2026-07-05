@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { automotivePhotos } from "@/components/brand/automotivePhotos";
 import {
   HistoryAuthRequiredError,
   HistorySetupRequiredError,
@@ -76,10 +77,22 @@ export function HistoryList() {
   }
 
   if (status === "empty") {
+    if (!errorMessage) {
+      return (
+        <div className="space-y-4">
+          <StatePanel
+            title="No saved vehicles yet"
+            body="Your garage will appear here after you save an inspection."
+          />
+          <DemoGarage />
+        </div>
+      );
+    }
+
     return (
       <StatePanel
-        title="No saved scans yet"
-        body={errorMessage ?? "Analyze a vehicle and press Save Scan to build your history."}
+        title="Garage unavailable"
+        body={errorMessage}
       />
     );
   }
@@ -90,7 +103,7 @@ export function HistoryList() {
         <Link
           key={scan.id}
           href={`/history/${scan.id}`}
-          className="grid gap-4 rounded-[2rem] bg-white/95 p-4 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(15,23,42,0.11)] sm:grid-cols-[10rem_1fr]"
+          className="grid gap-4 rounded-[2rem] bg-white/90 p-4 ring-1 ring-slate-200/80 transition duration-300 hover:-translate-y-0.5 hover:bg-white/95 sm:grid-cols-[10rem_1fr]"
         >
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-slate-100">
             <Image
@@ -136,6 +149,54 @@ function StatePanel({ title, body }: { title: string; body: string }) {
       <h2 className="text-xl font-bold text-slate-950">{title}</h2>
       <p className="mt-2 text-sm leading-6 text-slate-500">{body}</p>
     </section>
+  );
+}
+
+function DemoGarage() {
+  const examples = [
+    {
+      name: "2024 Porsche 911 GT3",
+      meta: "Demo inspection",
+      value: "$165k - $220k",
+      imageUrl: automotivePhotos.hero,
+    },
+    {
+      name: "2021 BMW M4 Competition",
+      meta: "Demo inspection",
+      value: "$62k - $78k",
+      imageUrl: automotivePhotos.coupe,
+    },
+  ];
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {examples.map((example) => (
+        <article
+          key={example.name}
+          className="overflow-hidden rounded-[2rem] bg-white/90 ring-1 ring-slate-200/80"
+        >
+          <div
+            className="relative h-44 bg-slate-950"
+            style={{
+              backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.36)), url(${example.imageUrl})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+            }}
+          >
+            <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold uppercase tracking-normal text-slate-500">
+              {example.meta}
+            </p>
+            <h3 className="mt-2 text-base font-semibold text-slate-950">
+              {example.name}
+            </h3>
+            <p className="mt-4 text-sm font-semibold text-slate-500">{example.value}</p>
+          </div>
+        </article>
+      ))}
+    </div>
   );
 }
 

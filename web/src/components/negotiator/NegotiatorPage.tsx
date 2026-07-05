@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, useRef, useState } from "react";
+import { automotivePhotos } from "@/components/brand/automotivePhotos";
 import { type NegotiatorAnalysis } from "@/types/negotiator";
 import { NegotiatorReport } from "./NegotiatorReport";
 
@@ -77,31 +78,24 @@ export function NegotiatorPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F7FB] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
-      <div className="mx-auto w-full max-w-3xl">
+    <main className="min-h-screen bg-[#05070A] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-6xl">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
-              Listing Negotiator
-            </p>
-            <h1 className="mt-2 text-4xl font-semibold tracking-normal text-slate-950">
-              Turn screenshots into leverage
+            <h1 className="text-4xl font-semibold tracking-normal text-slate-950">
+              Negotiator
             </h1>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">
-              Upload a marketplace listing, dealer page, or seller conversation. CarLens
-              extracts the visible details and drafts a negotiation plan.
-            </p>
           </div>
 
           <Link
-            href="/"
+            href="/dashboard"
             className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Home
           </Link>
         </header>
 
-        <section className="mt-8 overflow-hidden rounded-[2rem] bg-white/95 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80">
+        <section className="mt-12 overflow-hidden rounded-[2rem] bg-white/95 ring-1 ring-slate-200/80">
           <input
             ref={inputRef}
             type="file"
@@ -113,7 +107,7 @@ export function NegotiatorPage() {
           <button
             type="button"
             onClick={openPicker}
-            className="group relative flex min-h-80 w-full flex-col items-center justify-center overflow-hidden bg-slate-950 text-center text-white"
+            className="group relative flex min-h-96 w-full flex-col items-center justify-center overflow-hidden bg-slate-950 text-center text-white"
           >
             {previewUrl ? (
               <Image
@@ -125,7 +119,14 @@ export function NegotiatorPage() {
                 sizes="(max-width: 768px) 100vw, 768px"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-slate-900 to-slate-950" />
+              <div
+                className="image-zoom absolute inset-0 bg-[#0B0D12]"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.72)), url(${automotivePhotos.performance})`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              />
             )}
             <div className="relative p-8">
               <div className="mx-auto flex size-16 items-center justify-center rounded-3xl bg-white/15 ring-1 ring-white/25">
@@ -134,9 +135,6 @@ export function NegotiatorPage() {
               <h2 className="mt-5 text-2xl font-semibold">
                 {previewUrl ? "Change screenshot" : "Upload listing screenshot"}
               </h2>
-              <p className="mt-2 max-w-sm text-sm leading-6 text-slate-200">
-                Screenshots of listings, seller chats, or pricing pages work best.
-              </p>
             </div>
           </button>
 

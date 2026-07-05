@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05070a;
+  --foreground: #f8fafc;
 }
 
 @theme inline {
@@ -12,25 +12,92 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 247, 251, 0.96)),
-    #f5f7fb;
-  color: #0f172a;
+    radial-gradient(circle at 50% -10%, rgba(37, 99, 235, 0.2), transparent 34rem),
+    linear-gradient(180deg, #050505 0%, #070b12 48%, #050505 100%);
+  color: #f8fafc;
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.16);
-  color: #0f172a;
+  background: rgba(34, 211, 238, 0.28);
+  color: #ffffff;
+}
+
+.bg-\[\#F5F7FB\] {
+  background-color: #05070a !important;
+}
+
+.bg-white,
+.bg-white\/90,
+.bg-white\/95,
+.bg-white\/85 {
+  background-color: rgba(15, 23, 42, 0.84) !important;
+}
+
+.bg-slate-50,
+.bg-slate-50\/80,
+.bg-slate-50\/90,
+.bg-slate-100 {
+  background-color: rgba(2, 6, 23, 0.72) !important;
+}
+
+.bg-blue-50,
+.bg-red-50,
+.bg-emerald-50 {
+  background-color: rgba(30, 41, 59, 0.78) !important;
+}
+
+.text-slate-950,
+.text-slate-900 {
+  color: #f8fafc !important;
+}
+
+.text-slate-700,
+.text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.text-slate-500,
+.text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+.border-slate-200,
+.border-slate-200\/80,
+.border-slate-300 {
+  border-color: rgba(51, 65, 85, 0.8) !important;
+}
+
+.ring-slate-200,
+.ring-slate-200\/70,
+.ring-slate-200\/80,
+.ring-slate-300 {
+  --tw-ring-color: rgba(51, 65, 85, 0.82) !important;
+}
+
+.ring-blue-200 {
+  --tw-ring-color: rgba(37, 99, 235, 0.44) !important;
+}
+
+.placeholder\:text-slate-400::placeholder {
+  color: #64748b !important;
+}
+
+.hover\:bg-white:hover,
+.hover\:bg-slate-50:hover,
+.hover\:bg-blue-50:hover {
+  background-color: rgba(30, 41, 59, 0.92) !important;
+}
+
+.focus\:bg-white:focus {
+  background-color: rgba(15, 23, 42, 0.95) !important;
 }
 
 @keyframes scan {
@@ -51,4 +118,29 @@ body {
   100% {
     transform: translateX(100%);
   }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.motion-fade-up {
+  animation: fade-up 520ms ease-out both;
+}
+
+.image-zoom {
+  transition: transform 900ms ease, filter 900ms ease;
+}
+
+.group:hover .image-zoom {
+  transform: scale(1.035);
+  filter: saturate(1.05);
 }

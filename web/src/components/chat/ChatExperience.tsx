@@ -29,7 +29,7 @@ export function ChatExperience() {
   }, []);
 
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-6 grid flex-1 gap-5 lg:grid-cols-[22rem_minmax(0,1fr)]">
       <VehicleContextCard vehicle={vehicleAnalysis} />
       <ChatPanel vehicleAnalysis={vehicleAnalysis} imageDataUrl={imageDataUrl} />
     </div>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
+import { automotivePhotos } from "@/components/brand/automotivePhotos";
 import { storeScanImages } from "@/lib/scanSession";
 
 const MAX_IMAGES = 8;
@@ -144,30 +145,37 @@ export function VehicleUploadDropzone() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`cursor-pointer rounded-[2rem] border-2 border-dashed bg-white/90 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur transition duration-300 ${
+        className={`cursor-pointer rounded-[2rem] border border-dashed bg-[#0B0D12]/95 p-3 shadow-[0_28px_90px_rgba(0,0,0,0.32)] ring-1 ring-white/10 backdrop-blur transition duration-300 sm:p-4 ${
           isDragging
-            ? "border-blue-500 bg-blue-50 shadow-[0_24px_70px_rgba(37,99,235,0.16)]"
-            : "border-slate-300 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-[0_24px_70px_rgba(15,23,42,0.11)]"
+            ? "border-blue-500 bg-blue-950/35"
+            : "border-white/15 hover:-translate-y-0.5 hover:border-blue-400/70"
         }`}
       >
         {selectedImages.length > 0 ? (
           <SelectedImageGrid images={selectedImages} onRemove={removeImage} />
         ) : (
-          <div className="flex min-h-[28rem] flex-col items-center justify-center text-center">
-            <div className="flex size-20 items-center justify-center rounded-3xl bg-blue-50 text-blue-600">
+          <div
+            className="image-zoom relative flex min-h-[32rem] flex-col items-center justify-center overflow-hidden rounded-[1.75rem] bg-slate-950 text-center text-white"
+            style={{
+              backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.72)), url(${automotivePhotos.coupe})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+            }}
+          >
+            <div className="motion-fade-up flex size-16 items-center justify-center rounded-3xl bg-white/10 text-white ring-1 ring-white/15 backdrop-blur">
               <UploadIcon />
             </div>
-            <h2 className="mt-6 text-3xl font-semibold tracking-normal text-slate-950">
+            <h2 className="motion-fade-up mt-7 text-3xl font-semibold tracking-normal text-white sm:text-4xl">
               Upload vehicle photos
             </h2>
-            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
-              Drag and drop 1 to {MAX_IMAGES} images, or choose files from your device.
+            <p className="motion-fade-up mt-4 max-w-sm text-sm font-medium leading-6 text-slate-300">
+              Drag photos here or choose up to {MAX_IMAGES}.
             </p>
           </div>
         )}
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-slate-500">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1 pb-1">
+          <p className="text-sm font-semibold text-slate-400">
             {selectedImages.length}/{MAX_IMAGES} photos selected
           </p>
           <button
@@ -177,9 +185,9 @@ export function VehicleUploadDropzone() {
               openFilePicker();
             }}
             disabled={selectedImages.length >= MAX_IMAGES}
-            className="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-[0_14px_30px_rgba(37,99,235,0.22)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="rounded-full bg-white/10 px-5 py-3 text-sm font-bold text-white ring-1 ring-white/15 transition enabled:hover:-translate-y-0.5 enabled:hover:bg-white/15 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Add photos
+            {selectedImages.length > 0 ? "Add photos" : "Choose photos"}
           </button>
         </div>
       </div>
@@ -188,13 +196,13 @@ export function VehicleUploadDropzone() {
         type="button"
         disabled={selectedImages.length === 0 || isContinuing}
         onClick={handleContinue}
-        className="mt-5 flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-[0_18px_38px_rgba(37,99,235,0.24)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="mt-5 flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-[0_18px_42px_rgba(37,99,235,0.28)] transition enabled:hover:-translate-y-0.5 enabled:hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-slate-500 disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        {isContinuing ? "Preparing..." : "Continue"}
+        {isContinuing ? "Preparing..." : "Start Inspection"}
       </button>
 
       {errorMessage ? (
-        <p className="mt-3 text-center text-sm font-semibold text-red-600">
+        <p className="mt-3 text-center text-sm font-semibold text-red-400">
           {errorMessage}
         </p>
       ) : null}
@@ -210,22 +218,22 @@ function SelectedImageGrid({
   onRemove: (imageId: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {images.map((image, index) => (
         <div
           key={image.id}
-          className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
+          className="motion-fade-up group relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-slate-950 shadow-sm ring-1 ring-white/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(0,0,0,0.28)]"
         >
           <Image
             src={image.previewUrl}
             alt={`Selected vehicle photo ${index + 1}`}
             fill
             unoptimized
-            className="object-cover"
-            sizes="(max-width: 640px) 50vw, 160px"
+            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
           />
           {index === 0 ? (
-            <span className="absolute left-2 top-2 rounded-full bg-blue-600 px-2 py-1 text-xs font-bold text-white">
+            <span className="absolute left-3 top-3 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg shadow-blue-950/20">
               Primary
             </span>
           ) : null}
@@ -235,10 +243,10 @@ function SelectedImageGrid({
               event.stopPropagation();
               onRemove(image.id);
             }}
-            className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-white/95 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/55 text-sm font-bold text-white opacity-90 shadow-sm ring-1 ring-white/15 backdrop-blur transition hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label={`Remove photo ${index + 1}`}
           >
-            x
+            ×
           </button>
         </div>
       ))}

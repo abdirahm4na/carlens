@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CarLensLogo } from "@/components/brand/CarLensLogo";
 
 const navItems = [
-  { label: "Home", href: "/", icon: HomeIcon },
+  { label: "Home", href: "/dashboard", icon: HomeIcon },
   { label: "Scan", href: "/scan", icon: ScanIcon },
-  { label: "Negotiator", href: "/negotiator", icon: NegotiatorIcon },
-  { label: "History", href: "/history", icon: HistoryIcon },
+  { label: "Tools", href: "/tools", icon: NegotiatorIcon },
+  { label: "Garage", href: "/history", icon: HistoryIcon },
   { label: "Profile", href: "/profile", icon: ProfileIcon },
 ];
+
+const toolRoutes = ["/tools", "/vin", "/negotiator", "/chat"];
 
 export function BottomNavigation() {
   const pathname = usePathname();
@@ -17,13 +20,17 @@ export function BottomNavigation() {
   return (
     <nav
       aria-label="Primary navigation"
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200/80 bg-white/90 px-3 pb-4 pt-3 shadow-[0_-18px_50px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:px-5"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-800/80 bg-black/80 px-3 pb-4 pt-3 shadow-[0_-24px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:px-5 md:hidden"
     >
       <div className="mx-auto grid max-w-lg grid-cols-5 gap-1.5 sm:gap-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
-            item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : item.href === "/tools"
+                ? toolRoutes.some((route) => pathname.startsWith(route))
+              : pathname.startsWith(item.href);
 
           return (
             <Link
@@ -32,8 +39,8 @@ export function BottomNavigation() {
               aria-current={isActive ? "page" : undefined}
               className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl px-1 text-[11px] font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:text-xs ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-[0_12px_28px_rgba(37,99,235,0.24)]"
-                  : "text-slate-400 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-700"
+                  ? "bg-blue-600 text-white shadow-[0_14px_34px_rgba(37,99,235,0.38)]"
+                  : "text-slate-500 hover:-translate-y-0.5 hover:bg-white/10 hover:text-slate-100"
               }`}
             >
               <Icon />
@@ -47,19 +54,7 @@ export function BottomNavigation() {
 }
 
 function HomeIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m4 11 8-7 8 7" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 10v10h12V10" />
-    </svg>
-  );
+  return <CarLensLogo variant="icon" className="size-5" />;
 }
 
 function ScanIcon() {

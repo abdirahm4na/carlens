@@ -35,8 +35,8 @@ const features = [
 
 export function HomeFeatureGrid() {
   return (
-    <section className="mt-7">
-      <div className="grid grid-cols-2 gap-3">
+    <section className="mt-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {features.map((feature) => {
           const Icon = feature.icon;
 
@@ -44,7 +44,7 @@ export function HomeFeatureGrid() {
             <Link
               key={feature.href}
               href={feature.href}
-              className="group min-h-40 rounded-[1.75rem] bg-white/90 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(15,23,42,0.09)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="group min-h-44 rounded-[1.75rem] bg-white/90 p-5 shadow-[0_18px_44px_rgba(0,0,0,0.22)] ring-1 ring-slate-200/80 backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_60px_rgba(37,99,235,0.14)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                 <Icon />

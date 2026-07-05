@@ -4,16 +4,9 @@ export function ResultsHeader() {
   return (
     <header className="flex items-start justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
-          Identification Results
-        </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
-          Vehicle Details
+        <h1 className="text-3xl font-semibold tracking-normal text-slate-950">
+          Inspection Report
         </h1>
-        <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-          Review the detected vehicle profile before saving or asking AI for a deeper
-          breakdown.
-        </p>
       </div>
 
       <Link

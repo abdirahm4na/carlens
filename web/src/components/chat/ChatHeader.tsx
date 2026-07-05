@@ -4,16 +4,9 @@ export function ChatHeader() {
   return (
     <header className="flex items-start justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
-          AI Assistant
-        </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
-          Ask CarLens
+        <h1 className="text-3xl font-semibold tracking-normal text-slate-950">
+          AI Chat
         </h1>
-        <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-          Ask follow-up questions about the identified vehicle, ownership costs, and
-          buying considerations.
-        </p>
       </div>
 
       <Link

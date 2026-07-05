@@ -4,19 +4,16 @@ export function ScanHeader() {
   return (
     <header className="flex items-start justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
-          CarLens Scan
-        </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
+        <h1 className="text-3xl font-semibold tracking-normal text-slate-950">
           Scan Vehicle
         </h1>
         <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-          Upload a clear photo of the vehicle. Front, rear, or side angles work best.
+          Upload up to 8 photos.
         </p>
       </div>
 
       <Link
-        href="/"
+        href="/dashboard"
         className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         Back

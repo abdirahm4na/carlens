@@ -7,6 +7,7 @@ import {
   loginWithEmailPassword,
   signUpWithEmailPassword,
 } from "@/services/auth/auth";
+import { CarLensLogo } from "@/components/brand/CarLensLogo";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 type AuthMode = "login" | "signup";
@@ -68,8 +69,9 @@ export function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-[2rem] bg-white/95 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80 backdrop-blur sm:p-8">
-      <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
+    <section className="mx-auto w-full max-w-2xl rounded-[2rem] bg-white/95 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.10)] ring-1 ring-slate-200/80 backdrop-blur sm:p-8">
+      <CarLensLogo size="md" />
+      <p className="mt-8 text-sm font-semibold uppercase tracking-normal text-blue-600">
         {isLogin ? "Welcome back" : "Create account"}
       </p>
       <h1 className="mt-2 text-4xl font-semibold tracking-normal text-slate-950">

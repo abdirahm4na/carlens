@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { automotivePhotos } from "@/components/brand/automotivePhotos";
 import { type VehicleAnalysis } from "@/types/vehicle";
 
 export type VehicleSummary = VehicleAnalysis;
@@ -19,9 +20,9 @@ export function VehicleSummaryCard({
   const conditionScore = calculateConditionScore(vehicle);
 
   return (
-    <article className="space-y-5">
-      <section className="overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.12)] ring-1 ring-slate-200/80">
-        <div className="relative min-h-80 bg-gradient-to-br from-sky-300 via-blue-600 to-slate-950">
+    <article className="space-y-10">
+      <section className="overflow-hidden rounded-[2rem] bg-[#080A0F] shadow-[0_30px_100px_rgba(0,0,0,0.36)] ring-1 ring-white/10">
+        <div className="relative min-h-[28rem] bg-gradient-to-br from-sky-300 via-blue-600 to-slate-950 lg:min-h-[38rem]">
           {imageSrc ? (
             <Image
               src={imageSrc}
@@ -30,26 +31,29 @@ export function VehicleSummaryCard({
               unoptimized
               priority
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 768px"
+              sizes="(max-width: 768px) 100vw, 1280px"
             />
           ) : (
             <PlaceholderVehicle />
           )}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent p-6 pt-24 text-white">
-            <p className="text-xs font-bold uppercase tracking-normal text-blue-100">
-              Premium AI Inspection Report
-            </p>
-            <h2 className="mt-2 text-4xl font-semibold tracking-normal">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/50 to-transparent p-6 pt-32 text-white lg:p-12 lg:pt-48">
+            <p className="text-sm font-semibold text-blue-200">Vehicle</p>
+            <h2 className="mt-3 max-w-4xl text-4xl font-semibold tracking-normal lg:text-6xl">
               {title || "Vehicle not identified"}
             </h2>
-            <p className="mt-1 text-lg font-semibold text-slate-200">
-              {vehicle.trim || "Trim unknown"}
-            </p>
-            {photoCount > 1 ? (
-              <p className="mt-4 inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-bold text-white ring-1 ring-white/25">
-                Analysis used {photoCount} uploaded photos
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <p className="rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/15">
+                {vehicle.trim || "Trim unknown"}
               </p>
-            ) : null}
+              <p className="rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white">
+                {vehicle.confidence}% confidence
+              </p>
+              {photoCount > 1 ? (
+                <p className="rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/15">
+                  {photoCount} photos used
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
       </section>
@@ -62,89 +66,113 @@ export function VehicleSummaryCard({
       </section>
 
       <ReportSection
-        eyebrow="Vehicle Identity"
-        title="Identified vehicle"
-        body={vehicle.summary || "No appraisal summary returned."}
-      >
-        <div className="grid gap-3 sm:grid-cols-2">
-          <DetailTile label="Make" value={vehicle.make} />
-          <DetailTile label="Model" value={vehicle.model} />
-          <DetailTile label="Trim" value={vehicle.trim} />
-          <DetailTile label="Generation" value={vehicle.generation} />
-          <DetailTile label="Year" value={vehicle.year} />
-          <DetailTile label="Exterior Color" value={vehicle.exterior_color} />
-        </div>
-      </ReportSection>
-
-      <ReportSection
-        eyebrow="AI Confidence"
-        title={`${vehicle.confidence}% identification confidence`}
-        body={getConfidenceSummary(vehicle.confidence)}
-      >
-        <details className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
-          <summary className="cursor-pointer text-sm font-bold text-slate-950">
-            Confidence explanation
-          </summary>
-          <p className="mt-3 text-sm leading-6 text-slate-500">
-            The confidence score reflects how strongly the uploaded photo evidence
-            supports the reported make, model, trim, generation, and year. Low scores
-            mean the image or available context was insufficient, and the result should
-            be treated as a starting point for manual inspection.
-          </p>
-        </details>
-      </ReportSection>
-
-      <ReportSection eyebrow="Specs" title="Factory specification snapshot">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <DetailTile label="Engine" value={vehicle.engine} />
-          <DetailTile label="Horsepower" value={vehicle.horsepower} />
-          <DetailTile label="Drivetrain" value={vehicle.drivetrain} />
-          <DetailTile label="Transmission" value={vehicle.transmission} />
-        </div>
-      </ReportSection>
-
-      <ReportSection
-        eyebrow="Visible Modifications"
-        title="Observed non-factory changes"
-      >
-        <ListTile
-          emptyLabel="No visible modifications identified from the uploaded photos."
-          items={vehicle.visible_modifications}
-        />
-      </ReportSection>
-
-      <ReportSection
-        eyebrow="Condition & Damage"
-        title="Visual condition read"
-        body={getConditionSummary(vehicle)}
-      >
-        <div className="grid gap-3 sm:grid-cols-2">
-          <DetailTile label="Condition Score" value={`${conditionScore}/100`} />
-          <DetailTile
-            label="Damage Observations"
-            value="No dedicated damage field returned by the current AI schema."
-          />
-        </div>
-      </ReportSection>
-
-      <ReportSection
-        eyebrow="Reliability & Common Issues"
-        title="Ownership risk signals"
-      >
-        <div className="grid gap-3 sm:grid-cols-[12rem_1fr]">
-          <ScoreCard label="Reliability" value={vehicle.reliability} tone="slate" />
-          <ListTile
-            emptyLabel="No common issues returned for this analysis."
-            items={vehicle.common_issues}
-          />
-        </div>
-      </ReportSection>
-
-      <ReportSection
-        eyebrow="Buying Recommendation"
-        title={getBuyingRecommendationTitle(buyerScore)}
-        body={getBuyingRecommendation(vehicle, buyerScore)}
+        eyebrow="Quick Summary"
+        title="AI summary"
+        body={vehicle.summary || "No summary available."}
       />
+
+      <section className="space-y-5">
+        <div>
+          <p className="text-sm font-semibold text-blue-400">Inspection</p>
+          <h3 className="mt-2 text-3xl font-semibold tracking-normal text-white">
+            Vehicle report
+          </h3>
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.08fr)_minmax(24rem,0.92fr)] xl:items-start">
+          <div className="space-y-5">
+            <ReportSection eyebrow="Identity" title="Identified vehicle">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <DetailTile label="Make" value={vehicle.make} />
+                <DetailTile label="Model" value={vehicle.model} />
+                <DetailTile label="Trim" value={vehicle.trim} />
+                <DetailTile label="Generation" value={vehicle.generation} />
+                <DetailTile label="Year" value={vehicle.year} />
+                <DetailTile label="Exterior Color" value={vehicle.exterior_color} />
+              </div>
+            </ReportSection>
+
+            <ReportSection eyebrow="Specifications" title="Factory snapshot">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <DetailTile label="Engine" value={vehicle.engine} />
+                <DetailTile label="Horsepower" value={vehicle.horsepower} />
+                <DetailTile label="Drivetrain" value={vehicle.drivetrain} />
+                <DetailTile label="Transmission" value={vehicle.transmission} />
+              </div>
+            </ReportSection>
+
+            <ReportSection
+              eyebrow="Condition"
+              title="Visual condition"
+              body={getConditionSummary(vehicle)}
+            >
+              <div className="grid gap-3 sm:grid-cols-2">
+                <DetailTile label="Condition Score" value={`${conditionScore}/100`} />
+                <DetailTile label="Exterior Color" value={vehicle.exterior_color} />
+              </div>
+            </ReportSection>
+
+            <ReportSection
+              eyebrow="Damage"
+              title="Visible damage"
+              body={getDamageSummary()}
+            />
+          </div>
+
+        <aside className="space-y-5">
+          <ReportSection
+            eyebrow="AI Confidence"
+            title={`${vehicle.confidence}% identification confidence`}
+            body={getConfidenceSummary(vehicle.confidence)}
+          >
+            <details className="rounded-3xl bg-white/[0.04] p-4 ring-1 ring-white/10">
+              <summary className="cursor-pointer text-sm font-bold text-white">
+                Confidence explanation
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-slate-400">
+                This score reflects how clearly the photos support the make, model, trim,
+                generation, and year. Low scores should be verified with a VIN.
+              </p>
+            </details>
+          </ReportSection>
+
+          <ReportSection
+            eyebrow="Visible Modifications"
+            title="Non-factory changes"
+          >
+            <ListTile
+              emptyLabel="No visible modifications identified from the uploaded photos."
+              items={vehicle.visible_modifications}
+            />
+          </ReportSection>
+
+          <ReportSection
+            eyebrow="Reliability"
+            title="Common issues"
+          >
+            <div className="grid gap-3">
+              <ScoreCard label="Reliability" value={vehicle.reliability} tone="slate" />
+              <ListTile
+                emptyLabel="No common issues returned for this analysis."
+                items={vehicle.common_issues}
+              />
+            </div>
+          </ReportSection>
+
+          <ReportSection
+            eyebrow="Market Value"
+            title={vehicle.estimated_market_value || "Unknown value"}
+            body="Compare this range against the seller's asking price, mileage, title status, and service history."
+          />
+
+          <ReportSection
+            eyebrow="Buying Recommendation"
+            title={getBuyingRecommendationTitle(buyerScore)}
+            body={getBuyingRecommendation(vehicle, buyerScore)}
+          />
+        </aside>
+        </div>
+      </section>
     </article>
   );
 }
@@ -161,12 +189,12 @@ function ReportSection({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] bg-white/95 p-5 shadow-[0_16px_44px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/80 backdrop-blur sm:p-6">
-      <p className="text-xs font-bold uppercase tracking-normal text-blue-600">
+    <section className="rounded-[2rem] bg-white/[0.04] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)] ring-1 ring-white/10 backdrop-blur sm:p-6">
+      <p className="text-xs font-bold uppercase tracking-normal text-blue-400">
         {eyebrow}
       </p>
-      <h3 className="mt-2 text-2xl font-semibold tracking-normal text-slate-950">{title}</h3>
-      {body ? <p className="mt-3 text-sm leading-6 text-slate-500">{body}</p> : null}
+      <h3 className="mt-2 text-2xl font-semibold tracking-normal text-white">{title}</h3>
+      {body ? <p className="mt-3 text-sm leading-6 text-slate-400">{body}</p> : null}
       {children ? <div className="mt-5">{children}</div> : null}
     </section>
   );
@@ -182,16 +210,16 @@ function ScoreCard({
   tone: "emerald" | "blue" | "slate";
 }) {
   const toneClassName = {
-    emerald: "bg-emerald-50 text-emerald-700 ring-emerald-100",
-    blue: "bg-blue-50 text-blue-700 ring-blue-100",
-    slate: "bg-slate-50 text-slate-700 ring-slate-200",
+    emerald: "bg-white/[0.04] text-emerald-300 ring-white/10",
+    blue: "bg-white/[0.04] text-blue-300 ring-white/10",
+    slate: "bg-white/[0.04] text-slate-300 ring-white/10",
   }[tone];
 
   return (
-    <div className={`rounded-3xl p-4 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md ${toneClassName}`}>
+    <div className={`rounded-3xl p-4 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:bg-white/[0.06] ${toneClassName}`}>
       <p className="text-xs font-bold uppercase tracking-normal">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/80">
+      <p className="mt-2 text-3xl font-bold text-white">{value}</p>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
         <div className="h-full rounded-full bg-current" style={{ width: `${value}%` }} />
       </div>
     </div>
@@ -200,11 +228,11 @@ function ScoreCard({
 
 function ValueCard({ value }: { value: string }) {
   return (
-    <div className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md">
-      <p className="text-xs font-bold uppercase tracking-normal text-slate-500">
+    <div className="rounded-3xl bg-white/[0.04] p-4 shadow-sm ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-white/[0.06]">
+      <p className="text-xs font-bold uppercase tracking-normal text-slate-400">
         Estimated Market Value
       </p>
-      <p className="mt-2 text-xl font-bold leading-7 text-slate-950">
+      <p className="mt-2 text-xl font-bold leading-7 text-white">
         {value || "Unknown"}
       </p>
     </div>
@@ -213,9 +241,9 @@ function ValueCard({ value }: { value: string }) {
 
 function DetailTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl bg-slate-50/90 p-4 ring-1 ring-slate-200 transition hover:bg-white">
+    <div className="rounded-3xl bg-white/[0.04] p-4 ring-1 ring-white/10 transition hover:bg-white/[0.06]">
       <p className="text-xs font-bold uppercase tracking-normal text-slate-500">{label}</p>
-      <p className="mt-2 text-sm font-bold leading-5 text-slate-950">
+      <p className="mt-2 text-sm font-bold leading-5 text-white">
         {value || "Unknown"}
       </p>
     </div>
@@ -225,7 +253,7 @@ function DetailTile({ label, value }: { label: string; value: string }) {
 function ListTile({ emptyLabel, items }: { emptyLabel: string; items: string[] }) {
   if (items.length === 0) {
     return (
-      <div className="rounded-3xl bg-slate-50/90 p-4 text-sm font-bold leading-6 text-slate-500 ring-1 ring-slate-200">
+      <div className="rounded-3xl bg-white/[0.04] p-4 text-sm font-bold leading-6 text-slate-400 ring-1 ring-white/10">
         {emptyLabel}
       </div>
     );
@@ -236,7 +264,7 @@ function ListTile({ emptyLabel, items }: { emptyLabel: string; items: string[] }
       {items.map((item) => (
         <li
           key={item}
-          className="rounded-3xl bg-slate-50/90 p-4 text-sm font-semibold leading-6 text-slate-950 ring-1 ring-slate-200 transition hover:bg-white"
+          className="rounded-3xl bg-white/[0.04] p-4 text-sm font-semibold leading-6 text-white ring-1 ring-white/10 transition hover:bg-white/[0.06]"
         >
           {item}
         </li>
@@ -247,14 +275,14 @@ function ListTile({ emptyLabel, items }: { emptyLabel: string; items: string[] }
 
 function PlaceholderVehicle() {
   return (
-    <>
-      <div className="absolute bottom-20 left-8 right-8 h-16 rounded-t-[4rem] bg-white/85 shadow-2xl" />
-      <div className="absolute bottom-16 left-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
-      <div className="absolute bottom-16 right-16 size-9 rounded-full bg-slate-950 ring-8 ring-white/90" />
-      <div className="absolute left-6 top-6 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-normal text-white ring-1 ring-white/25">
-        Placeholder Image
-      </div>
-    </>
+    <div
+      className="absolute inset-0 bg-slate-950"
+      style={{
+        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.34)), url(${automotivePhotos.hero})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
+    />
   );
 }
 
@@ -294,10 +322,14 @@ function getConfidenceSummary(confidence: number) {
 
 function getConditionSummary(vehicle: VehicleAnalysis) {
   if (vehicle.visible_modifications.length > 0) {
-    return "The photos show visible modifications, so condition should be verified carefully in person.";
+    return "Visible modifications were detected. Verify workmanship, fitment, and service records in person.";
   }
 
-  return "No dedicated damage assessment was returned. Use the image review as a first pass and verify paint, panels, glass, wheels, tires, and underbody condition in person.";
+  return "No obvious modifications returned. Inspect paint, panels, tires, glass, and underbody in person.";
+}
+
+function getDamageSummary() {
+  return "No dedicated damage field is returned yet. Use the photos as a first pass, then verify panels, paint, glass, wheels, and underbody condition.";
 }
 
 function getBuyingRecommendationTitle(score: number) {

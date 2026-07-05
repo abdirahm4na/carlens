@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CarLensLogo } from "@/components/brand/CarLensLogo";
 
 type GreetingSectionProps = {
   greeting: string;
@@ -18,9 +19,9 @@ export function GreetingSection({ greeting, userName }: GreetingSectionProps) {
       <Link
         href="/profile"
         aria-label="Open profile"
-        className="flex size-12 items-center justify-center rounded-full bg-white text-sm font-bold text-blue-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="flex size-12 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
-        {userName.slice(0, 1).toUpperCase()}
+        <CarLensLogo variant="icon" size="sm" />
       </Link>
     </section>
   );

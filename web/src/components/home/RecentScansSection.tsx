@@ -9,10 +9,10 @@ type RecentScansSectionProps = {
 
 export function RecentScansSection({ scans }: RecentScansSectionProps) {
   return (
-    <section id="recent-scans" className="mt-8">
-      <SectionHeader title="Recent Scans" actionLabel="See All" actionHref="/history" />
+    <section id="recent-scans" className="mt-0">
+      <SectionHeader title="Recent" actionLabel="Garage" actionHref="/history" />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {scans.map((scan) => (
           <RecentScanCard key={scan.id} scan={scan} />
         ))}

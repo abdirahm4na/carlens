@@ -13,7 +13,7 @@ type TrendingVehiclesSectionProps = {
 
 export function TrendingVehiclesSection({ vehicles }: TrendingVehiclesSectionProps) {
   return (
-    <section className="mt-8">
+    <section className="mt-0">
       <SectionHeader title="Trending Vehicles" />
 
       <div className="space-y-3">

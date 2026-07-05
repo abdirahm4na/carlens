@@ -28,8 +28,8 @@ const fallbackVehicle: VehicleSummary = {
 
 export default function ResultsPage() {
   return (
-    <main className="min-h-screen bg-[#F5F7FB] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
-      <div className="mx-auto w-full max-w-3xl">
+    <main className="min-h-screen bg-[#05070A] px-5 py-7 text-slate-950 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-7xl">
         <ResultsHeader />
 
         <div className="mt-8 space-y-6">
