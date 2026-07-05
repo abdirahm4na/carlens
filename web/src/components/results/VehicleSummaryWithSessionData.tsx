@@ -1,16 +1,9 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import {
-  getServerStoredVehicleAnalysis,
-  getStoredVehicleAnalysis,
-  subscribeToVehicleAnalysisStorage,
-} from "@/lib/analysisSession";
-import {
-  getServerStoredScanImage,
-  getStoredScanImage,
-  subscribeToScanImageStorage,
-} from "@/lib/scanSession";
+import { useEffect, useState } from "react";
+import { getStoredVehicleAnalysis } from "@/lib/analysisSession";
+import { getStoredScanImage } from "@/lib/scanSession";
+import { type VehicleAnalysis } from "@/types/vehicle";
 import {
   VehicleSummaryCard,
   type VehicleSummary,
@@ -23,16 +16,26 @@ type VehicleSummaryWithSessionDataProps = {
 export function VehicleSummaryWithSessionData({
   fallbackVehicle,
 }: VehicleSummaryWithSessionDataProps) {
-  const imageSrc = useSyncExternalStore(
-    subscribeToScanImageStorage,
-    getStoredScanImage,
-    getServerStoredScanImage,
-  );
-  const analysis = useSyncExternalStore(
-    subscribeToVehicleAnalysisStorage,
-    getStoredVehicleAnalysis,
-    getServerStoredVehicleAnalysis,
-  );
+  const [imageSrc, setImageSrc] = useState<string>();
+  const [analysis, setAnalysis] = useState<VehicleAnalysis>();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    queueMicrotask(() => {
+      if (!isMounted) {
+        return;
+      }
+
+      setImageSrc(getStoredScanImage());
+      setAnalysis(getStoredVehicleAnalysis());
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const vehicle = analysis
     ? {
         ...fallbackVehicle,
