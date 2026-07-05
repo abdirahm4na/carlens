@@ -15,10 +15,28 @@ export function isVehicleAnalysis(value: unknown): value is VehicleAnalysis {
     typeof analysis.make === "string" &&
     typeof analysis.model === "string" &&
     typeof analysis.trim === "string" &&
-    typeof analysis.year_range === "string" &&
-    typeof analysis.confidence === "number" &&
+    typeof analysis.generation === "string" &&
+    typeof analysis.year === "string" &&
+    isScore(analysis.confidence) &&
+    isScore(analysis.reliability) &&
+    typeof analysis.engine === "string" &&
+    typeof analysis.horsepower === "string" &&
+    typeof analysis.drivetrain === "string" &&
+    typeof analysis.transmission === "string" &&
+    typeof analysis.estimated_market_value === "string" &&
+    typeof analysis.exterior_color === "string" &&
+    isStringArray(analysis.visible_modifications) &&
+    isStringArray(analysis.common_issues) &&
     typeof analysis.summary === "string"
   );
+}
+
+function isScore(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 100;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
 // Store only the typed analysis JSON returned by the API route. The uploaded image

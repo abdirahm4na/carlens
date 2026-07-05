@@ -37,15 +37,7 @@ export function VehicleSummaryWithSessionData({
   }, []);
 
   const vehicle = analysis
-    ? {
-        ...fallbackVehicle,
-        year: analysis.year_range,
-        make: analysis.make,
-        model: analysis.model,
-        trim: analysis.trim,
-        confidenceScore: analysis.confidence,
-        summary: analysis.summary,
-      }
+    ? analysis
     : fallbackVehicle;
 
   return <VehicleSummaryCard vehicle={vehicle} imageSrc={imageSrc} />;

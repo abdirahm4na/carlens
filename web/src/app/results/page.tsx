@@ -1,49 +1,30 @@
-import { CommonIssuesAccordion } from "@/components/results/CommonIssuesAccordion";
 import { ResultsActions } from "@/components/results/ResultsActions";
 import { ResultsHeader } from "@/components/results/ResultsHeader";
-import { SpecsGrid, type VehicleSpec } from "@/components/results/SpecsGrid";
 import { type VehicleSummary } from "@/components/results/VehicleSummaryCard";
 import { VehicleSummaryWithSessionData } from "@/components/results/VehicleSummaryWithSessionData";
 
 const fallbackVehicle: VehicleSummary = {
-  year: "2023",
   make: "Porsche",
   model: "911",
-  trim: "Carrera S",
-  confidenceScore: 98,
-  reliabilityScore: 86,
-  estimatedMarketValue: "$118,000 - $132,000",
+  trim: "GT3",
+  generation: "992.1",
+  year: "2022-2024",
+  confidence: 98,
+  reliability: 84,
+  engine: "4.0L naturally aspirated flat-six",
+  horsepower: "502 hp",
+  drivetrain: "Rear-wheel drive",
+  transmission: "6-speed manual or 7-speed PDK",
+  estimated_market_value: "$165,000 - $220,000",
+  visible_modifications: [],
+  exterior_color: "Unknown",
+  common_issues: [
+    "Track use can accelerate brake, tire, and suspension wear",
+    "Front splitter and underbody aero pieces are vulnerable to scraping",
+  ],
+  summary:
+    "Fallback appraisal data shown because no stored AI analysis is available.",
 };
-
-const specs: VehicleSpec[] = [
-  { label: "Engine", value: "3.0L twin-turbo flat-six" },
-  { label: "Horsepower", value: "443 hp" },
-  { label: "Drivetrain", value: "Rear-wheel drive" },
-  { label: "Transmission", value: "8-speed PDK" },
-  { label: "Body Style", value: "Coupe" },
-  { label: "Fuel Economy", value: "18 city / 24 highway" },
-];
-
-const commonIssues = [
-  {
-    id: "front-lift",
-    title: "Front axle lift wear",
-    description:
-      "Inspect the lift system for slow response, uneven height, or warning messages during startup.",
-  },
-  {
-    id: "pdk-service",
-    title: "PDK service history",
-    description:
-      "Confirm the transmission service interval was followed and check for hesitation during low-speed shifts.",
-  },
-  {
-    id: "brakes-tires",
-    title: "Brake and tire wear",
-    description:
-      "Performance tires and brakes can wear quickly. Review tread depth, rotor condition, and recent replacement records.",
-  },
-];
 
 export default function ResultsPage() {
   return (
@@ -53,8 +34,6 @@ export default function ResultsPage() {
 
         <div className="mt-8 space-y-6">
           <VehicleSummaryWithSessionData fallbackVehicle={fallbackVehicle} />
-          <SpecsGrid specs={specs} />
-          <CommonIssuesAccordion issues={commonIssues} />
           <ResultsActions />
         </div>
       </div>

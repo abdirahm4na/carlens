@@ -1,22 +1,16 @@
 import Image from "next/image";
+import { type VehicleAnalysis } from "@/types/vehicle";
 
-export type VehicleSummary = {
-  year: string;
-  make: string;
-  model: string;
-  trim: string;
-  confidenceScore: number;
-  reliabilityScore: number;
-  estimatedMarketValue: string;
-  summary?: string;
-};
+export type VehicleSummary = VehicleAnalysis;
 
 type VehicleSummaryCardProps = {
-  vehicle: VehicleSummary;
+  vehicle: VehicleAnalysis;
   imageSrc?: string;
 };
 
 export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProps) {
+  const title = [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ");
+
   return (
     <section className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-200">
       <div className="grid gap-0 md:grid-cols-[1.1fr_1fr]">
@@ -24,7 +18,7 @@ export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProp
           {imageSrc ? (
             <Image
               src={imageSrc}
-              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+              alt={title || "Analyzed vehicle"}
               fill
               unoptimized
               className="object-cover"
@@ -44,19 +38,21 @@ export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProp
 
         <div className="p-6">
           <p className="text-sm font-semibold uppercase tracking-normal text-blue-600">
-            {vehicle.year}
+            {vehicle.generation || "Generation unknown"}
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-normal text-slate-950">
-            {vehicle.make} {vehicle.model}
+            {title || "Vehicle not identified"}
           </h2>
-          <p className="mt-1 text-lg font-semibold text-slate-500">{vehicle.trim}</p>
-          {vehicle.summary ? (
-            <p className="mt-4 text-sm leading-6 text-slate-500">{vehicle.summary}</p>
-          ) : null}
+          <p className="mt-1 text-lg font-semibold text-slate-500">
+            {vehicle.trim || "Trim unknown"}
+          </p>
+          <p className="mt-4 text-sm leading-6 text-slate-500">
+            {vehicle.summary || "No appraisal summary returned."}
+          </p>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
-            <ScoreTile label="Confidence" value={`${vehicle.confidenceScore}%`} />
-            <ScoreTile label="Reliability" value={`${vehicle.reliabilityScore}/100`} />
+            <ScoreTile label="Confidence" value={`${vehicle.confidence}%`} />
+            <ScoreTile label="Reliability" value={`${vehicle.reliability}/100`} />
           </div>
 
           <div className="mt-4 rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
@@ -64,10 +60,36 @@ export function VehicleSummaryCard({ vehicle, imageSrc }: VehicleSummaryCardProp
               Estimated Market Value
             </p>
             <p className="mt-2 text-xl font-bold text-slate-950">
-              {vehicle.estimatedMarketValue}
+              {vehicle.estimated_market_value || "Not enough evidence"}
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="grid gap-4 border-t border-slate-200 p-6 sm:grid-cols-2">
+        <DetailTile label="Make" value={vehicle.make} />
+        <DetailTile label="Model" value={vehicle.model} />
+        <DetailTile label="Trim" value={vehicle.trim} />
+        <DetailTile label="Generation" value={vehicle.generation} />
+        <DetailTile label="Year" value={vehicle.year} />
+        <DetailTile label="Exterior Color" value={vehicle.exterior_color} />
+        <DetailTile label="Engine" value={vehicle.engine} />
+        <DetailTile label="Horsepower" value={vehicle.horsepower} />
+        <DetailTile label="Drivetrain" value={vehicle.drivetrain} />
+        <DetailTile label="Transmission" value={vehicle.transmission} />
+      </div>
+
+      <div className="grid gap-4 border-t border-slate-200 p-6 sm:grid-cols-2">
+        <ListTile
+          label="Visible Modifications"
+          emptyLabel="No visible modifications identified"
+          items={vehicle.visible_modifications}
+        />
+        <ListTile
+          label="Common Issues"
+          emptyLabel="No common issues returned"
+          items={vehicle.common_issues}
+        />
       </div>
     </section>
   );
@@ -78,6 +100,44 @@ function ScoreTile({ label, value }: { label: string; value: string }) {
     <div className="rounded-3xl bg-blue-50 p-4 ring-1 ring-blue-100">
       <p className="text-xs font-bold uppercase tracking-normal text-blue-600">{label}</p>
       <p className="mt-2 text-2xl font-bold text-slate-950">{value}</p>
+    </div>
+  );
+}
+
+function DetailTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
+      <p className="text-xs font-bold uppercase tracking-normal text-slate-500">{label}</p>
+      <p className="mt-2 text-sm font-bold leading-5 text-slate-950">
+        {value || "Unknown"}
+      </p>
+    </div>
+  );
+}
+
+function ListTile({
+  label,
+  emptyLabel,
+  items,
+}: {
+  label: string;
+  emptyLabel: string;
+  items: string[];
+}) {
+  return (
+    <div className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
+      <p className="text-xs font-bold uppercase tracking-normal text-slate-500">{label}</p>
+      {items.length > 0 ? (
+        <ul className="mt-3 space-y-2">
+          {items.map((item) => (
+            <li key={item} className="text-sm font-semibold leading-5 text-slate-950">
+              {item}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm font-bold leading-5 text-slate-950">{emptyLabel}</p>
+      )}
     </div>
   );
 }

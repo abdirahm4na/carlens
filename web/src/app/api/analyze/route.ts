@@ -1,14 +1,33 @@
 import { analyzeVehicle } from "@/lib/openai/analyzeVehicle";
 
-// This API route is the server entry point for vehicle image analysis. It accepts
-// multipart form data now so an uploaded image can be passed through later, while
-// still returning mocked JSON until the OpenAI integration is intentionally enabled.
+// This API route is the server entry point for vehicle image analysis. The uploaded
+// image stays server-side and is passed to the OpenAI Responses API from there.
 export async function POST(request: Request) {
-  const formData = await request.formData().catch(() => undefined);
-  const image = formData?.get("image");
-  const analysis = await analyzeVehicle({ image });
+  try {
+    const formData = await request.formData();
+    const image = formData.get("image");
 
-  return Response.json(analysis);
+    if (!(image instanceof File)) {
+      return Response.json(
+        { error: "A vehicle image is required in the image form field." },
+        { status: 400 },
+      );
+    }
+
+    const analysis = await analyzeVehicle({ image });
+
+    return Response.json(analysis);
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Vehicle analysis failed unexpectedly.",
+      },
+      { status: 500 },
+    );
+  }
 }
 
 // GET is intentionally unsupported because analysis should be triggered by an

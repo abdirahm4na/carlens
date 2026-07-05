@@ -1,6 +1,9 @@
-// This file is the single future home for OpenAI client configuration.
-// It intentionally does not instantiate an SDK client yet because CarLens is still
-// using mocked analysis data and no OpenAI package has been added.
+import "server-only";
+
+import OpenAI from "openai";
+
+// This file is the single home for OpenAI client configuration. It is imported
+// only by server code so the API key never reaches browser bundles.
 
 export type OpenAIClientConfig = {
   apiKey: string;
@@ -18,6 +21,12 @@ export function getOpenAIClientConfig(): OpenAIClientConfig {
 
   return {
     apiKey,
-    model: process.env.OPENAI_VEHICLE_MODEL ?? "gpt-4.1-mini",
+    model: process.env.OPENAI_VEHICLE_MODEL ?? "gpt-5",
   };
+}
+
+export function createOpenAIClient() {
+  const { apiKey } = getOpenAIClientConfig();
+
+  return new OpenAI({ apiKey });
 }
